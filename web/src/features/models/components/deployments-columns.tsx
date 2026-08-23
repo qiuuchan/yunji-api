@@ -74,7 +74,7 @@ export function useDeploymentsColumns(opts: {
             variant='neutral'
             copyText={name}
             size='sm'
-            className='-ml-1.5 font-mono'
+            className='font-cyber-mono -ml-1.5'
           />
         )
       },
@@ -235,7 +235,7 @@ export function useDeploymentsColumns(opts: {
           ts = Number(row.original.created_at)
         }
         return (
-          <div className='min-w-[140px] font-mono text-sm'>
+          <div className='font-cyber-mono min-w-[140px] text-sm'>
             {formatTimestampToDate(ts)}
           </div>
         )

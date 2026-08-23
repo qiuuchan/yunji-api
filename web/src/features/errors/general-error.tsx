@@ -55,10 +55,25 @@ export function GeneralError({
     : t('Please try again later.')
 
   return (
-    <div className={cn('h-svh w-full', className)}>
-      <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
+    <div
+      className={cn(
+        'bg-background text-foreground relative h-svh w-full overflow-hidden',
+        className
+      )}
+    >
+      {!minimal && (
+        <div
+          aria-hidden
+          className='pointer-events-none absolute inset-0 -z-10 opacity-70'
+          style={{
+            background:
+              'radial-gradient(50% 40% at 50% 42%, rgba(110,91,255,0.16) 0%, transparent 70%)',
+          }}
+        />
+      )}
+      <div className='relative z-10 m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
         {!minimal && (
-          <h1 className='text-[7rem] leading-tight font-bold'>
+          <h1 className='brand-gradient-text text-[7rem] leading-tight font-bold'>
             {status ?? 500}
           </h1>
         )}
@@ -73,11 +88,16 @@ export function GeneralError({
         )}
         {!minimal && (
           <div className='mt-6 flex flex-wrap justify-center gap-4'>
-            <Button variant='outline' onClick={() => history.go(-1)}>
+            <Button
+              variant='outline'
+              className='text-primary border-[rgba(110,91,255,0.4)] hover:bg-[rgba(110,91,255,0.1)]'
+              onClick={() => history.go(-1)}
+            >
               {t('Go Back')}
             </Button>
             <Button
               variant='outline'
+              className='text-primary border-[rgba(110,91,255,0.4)] hover:bg-[rgba(110,91,255,0.1)]'
               render={
                 <a
                   href={FEEDBACK_URL}
@@ -88,7 +108,10 @@ export function GeneralError({
             >
               {t('Report an issue')}
             </Button>
-            <Button onClick={() => navigate({ to: '/' })}>
+            <Button
+              className='shadow-[0_0_14px_rgba(110,91,255,0.4)] hover:shadow-[0_0_24px_rgba(110,91,255,0.7)]'
+              onClick={() => navigate({ to: '/' })}
+            >
               {t('Back to Home')}
             </Button>
           </div>

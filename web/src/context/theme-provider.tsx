@@ -16,24 +16,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import { createContext, useContext, useMemo, useState } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 type ResolvedTheme = Exclude<Theme, 'system'>
-
-const DEFAULT_THEME = 'system'
-const THEME_COOKIE_NAME = 'vite-ui-theme'
-const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 // 1 year
-const THEMES = new Set<Theme>(['dark', 'light', 'system'])
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -49,75 +35,30 @@ type ThemeProviderState = {
   resetTheme: () => void
 }
 
+/* 赛博雨幕主题为固定暗色，不再提供明暗切换/预设/字体轴。
+ * 保留 useTheme API（resolvedTheme 恒为 'dark'），使 sonner、
+ * use-chart-theme 与图表组件等消费方零改动。 */
 const initialState: ThemeProviderState = {
-  defaultTheme: DEFAULT_THEME,
-  resolvedTheme: 'light',
-  theme: DEFAULT_THEME,
+  defaultTheme: 'dark',
+  resolvedTheme: 'dark',
+  theme: 'dark',
   setTheme: () => null,
   resetTheme: () => null,
 }
 
 const ThemeContext = createContext<ThemeProviderState>(initialState)
 
-function getSystemTheme(): ResolvedTheme {
-  if (typeof window === 'undefined') return 'light'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light'
-}
-
-function resolveTheme(theme: Theme): ResolvedTheme {
-  return theme === 'system' ? getSystemTheme() : theme
-}
-
-function getStoredTheme(storageKey: string, fallback: Theme): Theme {
-  const storedTheme = getCookie(storageKey) as Theme | undefined
-  return storedTheme && THEMES.has(storedTheme) ? storedTheme : fallback
-}
-
 export function ThemeProvider({
   children,
-  defaultTheme = DEFAULT_THEME,
-  storageKey = THEME_COOKIE_NAME,
+  defaultTheme = 'dark',
   ...props
 }: ThemeProviderProps) {
-  const [theme, _setTheme] = useState<Theme>(() =>
-    getStoredTheme(storageKey, defaultTheme)
-  )
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
-    resolveTheme(getStoredTheme(storageKey, defaultTheme))
-  )
+  // 恒定暗色：状态仅用于满足 API 形态，行为不再随主题变化。
+  const [theme] = useState<Theme>('dark')
+  const [resolvedTheme] = useState<ResolvedTheme>('dark')
 
-  useEffect(() => {
-    const root = window.document.documentElement
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
-    const applyTheme = () => {
-      const nextResolvedTheme = theme === 'system' ? getSystemTheme() : theme
-      root.classList.remove('light', 'dark')
-      root.classList.add(nextResolvedTheme)
-      setResolvedTheme(nextResolvedTheme)
-    }
-
-    applyTheme()
-
-    mediaQuery.addEventListener('change', applyTheme)
-
-    return () => mediaQuery.removeEventListener('change', applyTheme)
-  }, [theme])
-
-  const setTheme = useCallback(
-    (theme: Theme) => {
-      setCookie(storageKey, theme, THEME_COOKIE_MAX_AGE)
-      _setTheme(theme)
-    },
-    [storageKey]
-  )
-
-  const resetTheme = useCallback(() => {
-    removeCookie(storageKey)
-    _setTheme(defaultTheme)
-  }, [defaultTheme, storageKey])
+  const setTheme = () => null
+  const resetTheme = () => null
 
   const contextValue = useMemo(
     () => ({
@@ -127,7 +68,7 @@ export function ThemeProvider({
       theme,
       setTheme,
     }),
-    [defaultTheme, resolvedTheme, resetTheme, theme, setTheme]
+    [defaultTheme, resolvedTheme, theme]
   )
 
   return (

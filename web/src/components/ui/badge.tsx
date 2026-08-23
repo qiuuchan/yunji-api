@@ -27,18 +27,28 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground [a]:hover:bg-primary/80',
+        default:
+          'bg-primary text-primary-foreground shadow-[0_0_12px_rgba(110,91,255,0.35)] [a]:hover:bg-primary/80',
         secondary:
-          'bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80 border border-primary/20',
         destructive:
-          'bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20',
+          'bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20 border border-destructive/40 shadow-[0_0_10px_rgba(255,46,136,0.2)]',
         warning:
-          'border-warning/40 bg-warning/10 text-warning focus-visible:ring-warning/20',
+          'border-warning/40 bg-warning/10 text-warning focus-visible:ring-warning/20 shadow-[0_0_10px_rgba(255,179,71,0.2)]',
         outline:
-          'border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground',
+          'border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground hover:border-primary/40 hover:text-primary',
         ghost:
           'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
         link: 'text-primary underline-offset-4 hover:underline',
+        cyan: 'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-cyan',
+        green:
+          'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-green',
+        pink: 'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-pink',
+        purple:
+          'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-purple',
+        amber:
+          'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-amber',
+        gray: 'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-gray',
       },
     },
     defaultVariants: {

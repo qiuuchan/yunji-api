@@ -33,7 +33,7 @@ interface NavLinkItemProps {
  */
 export function NavLinkItem({ link, className }: NavLinkItemProps) {
   const linkClassName = cn(
-    'text-muted-foreground hover:text-foreground transition-colors',
+    'text-muted-foreground hover:text-primary hover:bg-[rgba(110,91,255,0.06)] rounded-md px-2 py-1 transition-colors',
     link.disabled && 'pointer-events-none opacity-50',
     className
   )
@@ -76,9 +76,9 @@ export function NavLinkList({
 }: NavLinkListProps) {
   return (
     <>
-      {links.map((link, index) => (
+      {links.map((link) => (
         <NavLinkItem
-          key={index}
+          key={link.href || link.title}
           link={link}
           className={cn(className, itemClassName)}
         />

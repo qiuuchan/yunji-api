@@ -23,9 +23,19 @@ import { Button } from '@/components/ui/button'
 export function MaintenanceError() {
   const { t } = useTranslation()
   return (
-    <div className='h-svh'>
-      <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
-        <h1 className='text-[7rem] leading-tight font-bold'>503</h1>
+    <div className='bg-background text-foreground relative h-svh overflow-hidden'>
+      <div
+        aria-hidden
+        className='pointer-events-none absolute inset-0 -z-10 opacity-70'
+        style={{
+          background:
+            'radial-gradient(50% 40% at 50% 42%, rgba(110,91,255,0.16) 0%, transparent 70%)',
+        }}
+      />
+      <div className='relative z-10 m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
+        <h1 className='brand-gradient-text text-[7rem] leading-tight font-bold'>
+          503
+        </h1>
         <span className='font-medium'>
           {t('Website is under maintenance!')}
         </span>
@@ -34,7 +44,12 @@ export function MaintenanceError() {
           {t("We'll be back online shortly.")}
         </p>
         <div className='mt-6 flex gap-4'>
-          <Button variant='outline'>{t('Learn more')}</Button>
+          <Button
+            variant='outline'
+            className='text-primary border-[rgba(110,91,255,0.4)] hover:bg-[rgba(110,91,255,0.1)]'
+          >
+            {t('Learn more')}
+          </Button>
         </div>
       </div>
     </div>

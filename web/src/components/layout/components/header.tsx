@@ -25,7 +25,8 @@ export function Header({ className, children, ...props }: HeaderProps) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 h-[var(--app-header-height,3rem)] w-full shrink-0 bg-transparent',
+        'sticky top-0 z-50 w-full shrink-0 border-b border-[rgba(110,91,255,0.18)] bg-[rgba(5,6,11,0.7)] backdrop-blur-xl shadow-[0_6px_24px_-10px_rgba(110,91,255,0.45)]',
+        'h-[var(--app-header-height,3rem)]',
         className
       )}
       {...props}

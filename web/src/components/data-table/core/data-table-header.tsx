@@ -58,7 +58,7 @@ export function DataTableHeader<TData>({
               colSpan={header.colSpan}
               data-column-id={header.column.id}
               className={cn(
-                'relative',
+                'relative border-b border-[rgba(110,91,255,0.25)]',
                 getColumnClassName?.(header.column.id, 'header')
               )}
               style={getHeaderSizeStyle(header, applyHeaderSize)}

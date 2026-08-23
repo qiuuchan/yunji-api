@@ -751,7 +751,7 @@ export function AdvancedCustomEditorDialog({
                       >
                         <div className='flex min-w-0 flex-col gap-1 leading-snug whitespace-normal'>
                           <span>{option.label}</span>
-                          <span className='text-muted-foreground font-mono text-xs break-all'>
+                          <span className='text-muted-foreground font-cyber-mono text-xs break-all'>
                             {option.value}
                           </span>
                         </div>
@@ -872,7 +872,7 @@ export function AdvancedCustomEditorDialog({
                         )}
                       />
                     </span>
-                    <span className='text-muted-foreground block truncate font-mono text-xs'>
+                    <span className='text-muted-foreground font-cyber-mono block truncate text-xs'>
                       {routeGroup.incomingPath}
                     </span>
                   </span>
@@ -1008,7 +1008,9 @@ function ManagementRouteEditor({
           <p className='text-muted-foreground mt-1 max-w-lg text-sm'>
             {description}
           </p>
-          <p className='text-muted-foreground mt-2 font-mono text-xs'>{path}</p>
+          <p className='text-muted-foreground font-cyber-mono mt-2 text-xs'>
+            {path}
+          </p>
         </div>
         <Button
           type='button'
@@ -1043,7 +1045,9 @@ function ManagementRouteEditor({
         <div>
           <p className='font-medium'>{title}</p>
           <p className='text-muted-foreground mt-1 text-sm'>{description}</p>
-          <p className='text-muted-foreground mt-1 font-mono text-xs'>{path}</p>
+          <p className='text-muted-foreground font-cyber-mono mt-1 text-xs'>
+            {path}
+          </p>
         </div>
         <Button
           type='button'
@@ -1231,7 +1235,7 @@ function RouteGroupEditor({
                     >
                       <div className='flex min-w-0 flex-col gap-1 leading-snug whitespace-normal'>
                         <span>{option.label}</span>
-                        <span className='text-muted-foreground font-mono text-xs break-all'>
+                        <span className='text-muted-foreground font-cyber-mono text-xs break-all'>
                           {option.value}
                         </span>
                       </div>
@@ -1518,7 +1522,7 @@ function RouteEditor({
                       <Badge
                         key={model}
                         variant={ruleKind === 'regex' ? 'outline' : 'secondary'}
-                        className='max-w-full gap-1.5 font-mono'
+                        className='font-cyber-mono max-w-full gap-1.5'
                       >
                         <span className='font-sans text-[10px] font-semibold tracking-normal uppercase'>
                           {t(ruleKind === 'regex' ? 'Regex' : 'Exact')}

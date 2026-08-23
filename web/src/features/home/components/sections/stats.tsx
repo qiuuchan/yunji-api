@@ -16,72 +16,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { useRef, useEffect, useCallback } from 'react'
+import { animate, useInView, useReducedMotion } from 'motion/react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface CounterProps {
-  end: number
-  suffix?: string
-  prefix?: string
-  duration?: number
-  decimals?: number
-}
-
-function Counter(props: CounterProps) {
-  const { end, suffix = '', prefix = '', duration = 1600, decimals = 0 } = props
-  const ref = useRef<HTMLSpanElement>(null)
-  const startedRef = useRef(false)
-
-  const formatValue = useCallback(
-    (v: number) =>
-      decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString(),
-    [decimals]
-  )
-
-  const animate = useCallback(() => {
-    const el = ref.current
-    if (!el) return
-    const start = performance.now()
-    const step = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      el.textContent = `${prefix}${formatValue(eased * end)}${suffix}`
-      if (progress < 1) requestAnimationFrame(step)
-    }
-    requestAnimationFrame(step)
-  }, [end, duration, prefix, suffix, formatValue])
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) {
-      el.textContent = `${prefix}${formatValue(end)}${suffix}`
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !startedRef.current) {
-          startedRef.current = true
-          animate()
-          observer.unobserve(el)
-        }
-      },
-      { threshold: 0.5 }
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [animate, end, prefix, suffix, formatValue])
-
-  return (
-    <span ref={ref} className='tabular-nums'>
-      {prefix}0{suffix}
-    </span>
-  )
-}
+import { getDefaultStats } from '../../constants'
 
 interface StatsProps {
   className?: string
@@ -94,15 +33,56 @@ interface StatItem {
   decimals?: number
 }
 
+function AnimatedNumber(props: {
+  end: number
+  suffix: string
+  prefix?: string
+  decimals?: number
+}) {
+  const { end, suffix = '', prefix = '', decimals = 0 } = props
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const reduceMotion = useReducedMotion()
+
+  const format = useCallback(
+    (v: number) =>
+      decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString(),
+    [decimals]
+  )
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    if (reduceMotion || !inView) {
+      el.textContent = `${prefix}${format(end)}${suffix}`
+      return
+    }
+
+    const controls = animate(0, end, {
+      duration: 1.6,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate(latest) {
+        el.textContent = `${prefix}${format(latest)}${suffix}`
+      },
+    })
+    return () => controls.stop()
+  }, [inView, reduceMotion, end, prefix, suffix, decimals, format])
+
+  return (
+    <span ref={ref} className='tabular-nums'>
+      {prefix}0{suffix}
+    </span>
+  )
+}
+
 export function Stats(_props: StatsProps) {
   const { t } = useTranslation()
-
-  const stats: StatItem[] = [
-    { end: 50, suffix: '+', label: t('upstream services integrated') },
-    { end: 100, suffix: '+', label: t('model billing support') },
-    { end: 50, suffix: '+', label: t('compatible API routes') },
-    { end: 10, suffix: '+', label: t('scheduling controls') },
-  ]
+  const stats: StatItem[] = getDefaultStats(t).map((s) => ({
+    end: Number(s.value) || 0,
+    suffix: s.suffix ?? '',
+    label: s.description ?? '',
+  }))
 
   return (
     <div className='border-border/40 bg-muted/10 relative z-10 border-y'>
@@ -113,8 +93,8 @@ export function Stats(_props: StatsProps) {
               key={s.label}
               className='flex flex-col items-center text-center'
             >
-              <span className='text-2xl font-bold tracking-tight md:text-3xl'>
-                <Counter end={s.end} suffix={s.suffix} decimals={s.decimals} />
+              <span className='brand-gradient-text text-2xl font-bold tracking-tight md:text-3xl'>
+                <AnimatedNumber end={s.end} suffix={s.suffix} />
               </span>
               <span className='text-muted-foreground mt-1.5 text-xs'>
                 {s.label}

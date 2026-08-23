@@ -584,9 +584,9 @@ const getModeTagTailwind = (mode: string): string => {
   if (mode.includes('copy') || mode.includes('move'))
     return 'bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/20'
   if (mode.includes('error') || mode.includes('prune'))
-    return 'bg-red-500/15 text-red-700 dark:text-red-300 border-red-500/20'
+    return 'bg-destructive/10 text-destructive border-destructive/40'
   if (mode.includes('sync'))
-    return 'bg-green-500/15 text-green-700 dark:text-green-300 border-green-500/20'
+    return 'bg-success/10 text-success border-success/40'
   return 'bg-muted text-muted-foreground'
 }
 
@@ -2292,7 +2292,7 @@ function RuleEditor(ruleEditorProps: RuleEditorProps) {
                 }
                 placeholder={getModeValuePlaceholder(mode)}
                 rows={3}
-                className='max-h-[200px] resize-y overflow-y-auto font-mono text-xs'
+                className='font-cyber-mono max-h-[200px] resize-y overflow-y-auto text-xs'
               />
             </div>
           ))}

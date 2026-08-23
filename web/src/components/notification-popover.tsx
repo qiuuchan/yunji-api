@@ -309,7 +309,10 @@ export function NotificationPopover({
           <Button
             variant='ghost'
             size='icon'
-            className={cn('relative size-9', className)}
+            className={cn(
+              'relative size-9 transition-colors hover:border-[rgba(110,91,255,0.35)] hover:bg-[rgba(110,91,255,0.07)] hover:text-primary hover:shadow-[0_0_12px_rgba(110,91,255,0.3)]',
+              className
+            )}
             aria-label={t('Notifications')}
           />
         }

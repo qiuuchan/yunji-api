@@ -20,7 +20,6 @@ import { VChart } from '@visactor/react-vchart'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useThemeCustomization } from '@/context/theme-customization-provider'
 import { getSuccessRateColor } from '@/features/performance-metrics/lib/format'
 import { useThemeRadiusPx } from '@/lib/theme-radius'
 import { useChartTheme } from '@/lib/use-chart-theme'
@@ -28,6 +27,9 @@ import { cn } from '@/lib/utils'
 import { VCHART_OPTION } from '@/lib/vchart'
 
 import type { LatencyTimePoint, UptimeDayPoint } from '../lib/mock-stats'
+
+/** Neon chart palette (cyan, purple, pink, green, amber). */
+const NEON_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
 
 function formatHourLabel(iso: string): string {
   const date = new Date(iso)
@@ -114,6 +116,7 @@ export function LatencyTrendChart(props: {
       xField: 'time',
       yField: 'ttft',
       seriesField: 'group',
+      color: NEON_PALETTE,
       smooth: true,
       point: {
         visible: true,
@@ -224,7 +227,7 @@ export function UptimeTrendChart(props: {
       yField: 'uptime',
       smooth: true,
       line: {
-        style: { stroke: '#10b981', lineWidth: 2 },
+        style: { stroke: '#34d399', lineWidth: 2 },
       },
       point: {
         visible: true,
@@ -326,11 +329,8 @@ export function ThroughputBarChart(props: {
   const { t } = useTranslation()
   const { resolvedTheme, themeReady } = useChartTheme()
   const { textColor, gridColor } = getChartThemeTokens(resolvedTheme)
-  const { customization } = useThemeCustomization()
-  const barRadius = useThemeRadiusPx(
-    '--radius-sm',
-    `${customization.preset}:${customization.radius}`
-  )
+  // 固定赛博暗色主题：半径缓存键不再随预设变化。
+  const barRadius = useThemeRadiusPx('--radius-sm', 'cyber:4px')
 
   const filtered = useMemo(
     () => props.rows.filter((r) => r.throughput_tps > 0),
@@ -347,7 +347,7 @@ export function ThroughputBarChart(props: {
       yField: 'group',
       bar: {
         style: {
-          fill: '#6366f1',
+          fill: '#38bdf8',
           ...(barRadius == null ? {} : { cornerRadius: barRadius }),
         },
       },

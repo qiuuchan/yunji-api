@@ -250,7 +250,7 @@ export function SummaryCards() {
   })
 
   return (
-    <div className='bg-card overflow-hidden rounded-2xl border shadow-xs'>
+    <div className='glass-panel overflow-hidden rounded-2xl border border-[rgba(110,91,255,0.14)] shadow-xs'>
       <div className='grid xl:grid-cols-[minmax(0,1fr)_19rem]'>
         <div className='flex flex-col gap-2.5 p-3 sm:gap-3 sm:p-5'>
           <div className='flex flex-wrap items-start justify-between gap-3'>
@@ -267,7 +267,7 @@ export function SummaryCards() {
             {items.map((it) => (
               <StaggerItem
                 key={it.key}
-                className='bg-background/60 rounded-lg border px-2 py-1.5 sm:rounded-xl sm:p-3'
+                className='glass-panel rounded-lg border border-[rgba(110,91,255,0.14)] px-2 py-1.5 sm:rounded-xl sm:p-3'
               >
                 <StatCard
                   title={it.title}

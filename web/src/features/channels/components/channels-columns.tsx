@@ -871,7 +871,7 @@ export function useChannelsColumns(
                           {t('From IO.NET deployment')}
                         </div>
                         {deploymentId && (
-                          <div className='text-muted-foreground font-mono text-xs'>
+                          <div className='text-muted-foreground font-cyber-mono text-xs'>
                             {t('Deployment ID')}: {deploymentId}
                           </div>
                         )}
@@ -1043,7 +1043,7 @@ export function useChannelsColumns(
                   label={model}
                   autoColor={model}
                   size='sm'
-                  className='font-mono'
+                  className='font-cyber-mono'
                 />
               ))}
             />
@@ -1191,7 +1191,7 @@ export function useChannelsColumns(
                   }
                 />
                 <TooltipContent side='top'>
-                  <p className='font-mono text-sm'>{fullDate}</p>
+                  <p className='font-cyber-mono text-sm'>{fullDate}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

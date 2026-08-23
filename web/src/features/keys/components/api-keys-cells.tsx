@@ -79,7 +79,7 @@ export function ApiKeyCell({ apiKey }: { apiKey: ApiKey }) {
     copyIcon = <Loader2 className='size-3.5 animate-spin' />
     copyTooltip = t('Loading...')
   } else if (isCopied) {
-    copyIcon = <Check className='size-3.5 text-green-600' />
+    copyIcon = <Check className='text-success size-3.5' />
     copyTooltip = t('Copied!')
   }
 
@@ -91,7 +91,7 @@ export function ApiKeyCell({ apiKey }: { apiKey: ApiKey }) {
             <Button
               variant='ghost'
               size='sm'
-              className='text-muted-foreground h-7 max-w-full min-w-0 justify-start truncate px-0 font-mono text-xs hover:bg-transparent aria-expanded:bg-transparent'
+              className='text-muted-foreground font-cyber-mono h-7 max-w-full min-w-0 justify-start truncate px-0 text-xs hover:bg-transparent aria-expanded:bg-transparent'
             />
           }
         >
@@ -116,7 +116,7 @@ export function ApiKeyCell({ apiKey }: { apiKey: ApiKey }) {
                 value={resolvedFullKey || maskedKey}
                 autoFocus
                 onFocus={(e) => e.target.select()}
-                className='bg-muted/50 w-full min-w-[280px] rounded-md border px-3 py-2 font-mono text-xs outline-none'
+                className='bg-muted/50 font-cyber-mono w-full min-w-[280px] rounded-md border px-3 py-2 text-xs outline-none'
               />
             )}
           </div>
@@ -204,7 +204,7 @@ export function ModelLimitsCell({ apiKey }: { apiKey: ApiKey }) {
       <TooltipContent side='top' className='max-w-xs'>
         <div className='max-h-[200px] space-y-0.5 overflow-y-auto text-xs'>
           {models.map((m) => (
-            <div key={m} className='font-mono'>
+            <div key={m} className='font-cyber-mono'>
               {m}
             </div>
           ))}
@@ -246,7 +246,7 @@ export function IpRestrictionsCell({ apiKey }: { apiKey: ApiKey }) {
       <TooltipContent side='top' className='max-w-xs'>
         <div className='max-h-[200px] space-y-0.5 overflow-y-auto text-xs'>
           {ips.map((ip) => (
-            <div key={ip} className='font-mono'>
+            <div key={ip} className='font-cyber-mono'>
               {ip}
             </div>
           ))}

@@ -127,6 +127,7 @@ function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
       <SidebarMenuButton
         isActive={checkIsActive(href, item)}
         tooltip={item.title}
+        className='data-[active=true]:border-primary data-[active=true]:text-primary hover:text-primary hover:bg-[rgba(110,91,255,0.06)] data-[active=true]:border-l-2 data-[active=true]:bg-[rgba(110,91,255,0.08)] data-[active=true]:shadow-[0_0_12px_rgba(110,91,255,0.15)]'
         render={
           <Link
             to={item.url}
@@ -176,7 +177,12 @@ function SidebarMenuCollapsible({
     >
       <CollapsibleTrigger
         className='group/collapsible-trigger'
-        render={<SidebarMenuButton tooltip={item.title} />}
+        render={
+          <SidebarMenuButton
+            tooltip={item.title}
+            className='data-[active=true]:border-primary data-[active=true]:text-primary hover:text-primary hover:bg-[rgba(110,91,255,0.06)] data-[active=true]:border-l-2 data-[active=true]:bg-[rgba(110,91,255,0.08)] data-[active=true]:shadow-[0_0_12px_rgba(110,91,255,0.15)]'
+          />
+        }
       >
         {item.icon && <item.icon className='shrink-0' />}
         <span className='min-w-0 flex-1 truncate'>{item.title}</span>
@@ -189,6 +195,7 @@ function SidebarMenuCollapsible({
             <SidebarMenuSubItem key={subItem.title}>
               <SidebarMenuSubButton
                 isActive={checkIsActive(href, subItem)}
+                className='data-[active=true]:border-primary data-[active=true]:text-primary hover:text-primary hover:bg-[rgba(110,91,255,0.06)] data-[active=true]:border-l-2 data-[active=true]:bg-[rgba(110,91,255,0.08)] data-[active=true]:shadow-[0_0_12px_rgba(110,91,255,0.15)]'
                 render={
                   <Link
                     to={subItem.url}
@@ -228,6 +235,7 @@ function SidebarMenuCollapsedDropdown({
             <SidebarMenuButton
               tooltip={item.title}
               isActive={checkIsActive(href, item)}
+              className='data-[active=true]:border-primary data-[active=true]:text-primary hover:text-primary hover:bg-[rgba(110,91,255,0.06)] data-[active=true]:border-l-2 data-[active=true]:bg-[rgba(110,91,255,0.08)] data-[active=true]:shadow-[0_0_12px_rgba(110,91,255,0.15)]'
             />
           }
         >

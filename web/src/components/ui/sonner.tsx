@@ -76,31 +76,38 @@ const Toaster = (props: ToasterProps) => {
       }}
       style={
         {
-          '--normal-bg': 'var(--popover)',
-          '--normal-text': 'var(--popover-foreground)',
-          '--normal-border': 'var(--border)',
-          '--success-bg':
-            'color-mix(in oklch, var(--success) 16%, var(--popover))',
-          '--success-border':
-            'color-mix(in oklch, var(--success) 35%, var(--border))',
-          '--success-text': 'var(--success)',
-          '--info-bg': 'color-mix(in oklch, var(--info) 16%, var(--popover))',
-          '--info-border':
-            'color-mix(in oklch, var(--info) 35%, var(--border))',
-          '--info-text': 'var(--info)',
-          '--warning-bg':
-            'color-mix(in oklch, var(--warning) 18%, var(--popover))',
-          '--warning-border':
-            'color-mix(in oklch, var(--warning) 38%, var(--border))',
-          '--warning-text': 'var(--warning)',
-          '--error-bg':
-            'color-mix(in oklch, var(--destructive) 16%, var(--popover))',
-          '--error-border':
-            'color-mix(in oklch, var(--destructive) 35%, var(--border))',
-          '--error-text': 'var(--destructive)',
+          '--normal-bg': 'rgba(14,14,22,0.92)',
+          '--normal-text': 'var(--cyber-text)',
+          '--normal-border': 'rgba(110,91,255,0.18)',
+          '--success-bg': 'rgba(14,14,22,0.92)',
+          '--success-border': 'rgba(57,255,136,0.45)',
+          '--success-text': 'var(--cyber-green)',
+          '--info-bg': 'rgba(14,14,22,0.92)',
+          '--info-border': 'rgba(110,91,255,0.45)',
+          '--info-text': 'var(--cyber-cyan)',
+          '--warning-bg': 'rgba(14,14,22,0.92)',
+          '--warning-border': 'rgba(255,179,71,0.45)',
+          '--warning-text': 'var(--cyber-amber)',
+          '--error-bg': 'rgba(14,14,22,0.92)',
+          '--error-border': 'rgba(255,46,136,0.45)',
+          '--error-text': 'var(--cyber-pink)',
           '--border-radius': 'var(--radius)',
         } as React.CSSProperties
       }
+      toastOptions={{
+        classNames: {
+          toast:
+            'group toast group-[.toaster]:bg-[rgba(14,14,22,0.92)] group-[.toaster]:text-foreground group-[.toaster]:border-[rgba(110,91,255,0.18)] group-[.toaster]:backdrop-blur-xl group-[.toaster]:shadow-[0_0_24px_rgba(110,91,255,0.08)] group-[.toaster]:rounded-lg',
+          description: 'group-[.toast]:text-muted-foreground',
+          actionButton:
+            'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:shadow-[0_0_12px_rgba(110,91,255,0.4)]',
+          cancelButton:
+            'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
+          success: 'group-[.toaster]:border-[rgba(57,255,136,0.45)]',
+          error: 'group-[.toaster]:border-[rgba(255,46,136,0.45)]',
+          warning: 'group-[.toaster]:border-[rgba(255,179,71,0.45)]',
+        },
+      }}
       {...props}
     />
   )

@@ -99,7 +99,7 @@ type ConflictFieldRow = {
 
 function ValuePreview({ value }: { value: unknown }) {
   return (
-    <pre className='bg-muted/70 text-muted-foreground max-h-32 overflow-auto rounded-md border px-2 py-1.5 font-mono text-xs break-words whitespace-pre-wrap'>
+    <pre className='bg-muted/70 text-muted-foreground font-cyber-mono max-h-32 overflow-auto rounded-md border px-2 py-1.5 text-xs break-words whitespace-pre-wrap'>
       {formatValue(value)}
     </pre>
   )
@@ -211,7 +211,7 @@ export function UpstreamConflictDialog({
           ) : null}
           <div className='space-y-1'>
             <p className='leading-none font-medium'>{row.original.modelName}</p>
-            <span className='text-muted-foreground font-mono text-xs'>
+            <span className='text-muted-foreground font-cyber-mono text-xs'>
               {row.original.fieldKey}
             </span>
             {isMobile ? (

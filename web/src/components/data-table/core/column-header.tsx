@@ -16,7 +16,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { type Column } from '@tanstack/react-table'
+import type { Column } from '@tanstack/react-table'
 import {
   ArrowDown as ArrowDownIcon,
   ArrowUp as ArrowUpIcon,
@@ -51,6 +51,18 @@ export function DataTableColumnHeader<TData, TValue>({
     return <div className={cn(className)}>{title}</div>
   }
 
+  const sorted = column.getIsSorted()
+  let sortIcon
+  if (sorted === 'desc') {
+    sortIcon = <ArrowDownIcon className='text-primary ms-2 h-4 w-4' />
+  } else if (sorted === 'asc') {
+    sortIcon = <ArrowUpIcon className='text-primary ms-2 h-4 w-4' />
+  } else {
+    sortIcon = (
+      <CaretSortIcon className='text-muted-foreground/70 ms-2 h-4 w-4' />
+    )
+  }
+
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
@@ -64,13 +76,7 @@ export function DataTableColumnHeader<TData, TValue>({
           }
         >
           <span>{title}</span>
-          {column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon className='ms-2 h-4 w-4' />
-          ) : column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon className='ms-2 h-4 w-4' />
-          ) : (
-            <CaretSortIcon className='ms-2 h-4 w-4' />
-          )}
+          {sortIcon}
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start'>
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>

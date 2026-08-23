@@ -75,12 +75,24 @@ const ICON_TONE_BY_STAT_TONE: Record<StatCardTone, IconBadgeTone> = {
   'accent-3': 'chart-3',
 }
 
+const ICON_GLOW_CLASSES: Record<StatCardTone, string> = {
+  'accent-1': 'shadow-[0_0_14px_rgba(110,91,255,0.5)]',
+  'accent-2': 'shadow-[0_0_14px_rgba(176,77,255,0.5)]',
+  'accent-3': 'shadow-[0_0_14px_rgba(57,255,136,0.5)]',
+}
+
 const DETAIL_TONE_CLASSES: Record<StatCardDetailTone, string> = {
   default: 'text-foreground',
   muted: 'text-muted-foreground',
   success: 'text-success',
   warning: 'text-warning',
   destructive: 'text-destructive',
+}
+
+const VALUE_TONE_CLASSES: Record<StatCardTone, string> = {
+  'accent-1': 'text-primary glow-cyan',
+  'accent-2': 'text-accent',
+  'accent-3': 'text-success',
 }
 
 interface SparklineBucket {
@@ -273,7 +285,12 @@ export function StatCard(props: StatCardProps) {
   } else {
     valueContent = (
       <div className='flex flex-col gap-1'>
-        <div className='text-foreground font-mono text-base font-semibold tracking-tight break-all tabular-nums sm:text-2xl'>
+        <div
+          className={cn(
+            'font-mono text-base font-semibold tracking-tight break-all tabular-nums sm:text-2xl',
+            VALUE_TONE_CLASSES[tone]
+          )}
+        >
           {props.value}
         </div>
         <p
@@ -300,7 +317,7 @@ export function StatCard(props: StatCardProps) {
   return (
     <div
       className={cn(
-        'group flex flex-col justify-between sm:min-h-32 sm:gap-3',
+        'glass-panel group flex flex-col justify-between rounded-xl p-3 sm:min-h-32 sm:gap-3 sm:p-4',
         props.compactMobile ? 'gap-1' : 'gap-1.5'
       )}
     >
@@ -310,6 +327,7 @@ export function StatCard(props: StatCardProps) {
             tone={iconTone}
             size='stat'
             className={cn(
+              ICON_GLOW_CLASSES[tone],
               props.compactMobile &&
                 'size-4 rounded-sm [&>svg]:size-2.5 sm:size-7 sm:rounded-md sm:[&>svg]:size-3.5'
             )}

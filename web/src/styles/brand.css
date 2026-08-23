@@ -1,0 +1,118 @@
+/*
+Copyright (C) 2023-2026 QuantumNous
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+For commercial licensing, please contact support@quantumnous.com
+*/
+/* ============================================================
+   Brand Design System — 品牌设计系统工具层
+   mimo 风：深色 #0a0a0f + 蓝紫渐变 #6e5bff 系 + 毛玻璃。
+   本文件承载品牌专属 token、GeistMono @font-face 与 brand-*
+   工具类；历史 cyber/neon 命名的兼容取值见 cyber.css（过渡
+   别名层，二期清理命名）。
+   ============================================================ */
+
+/* GeistMono 等宽字体（自 cyber.css 接管，供 font-cyber-mono /
+ * --font-mono 使用；相对路径引用 src/assets，由 Rsbuild 哈希打包） */
+@font-face {
+  font-family: 'GeistMono';
+  src: url('../assets/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    /* ---- 品牌 token ---- */
+    --brand-primary: #6e5bff; /* 主色：蓝紫 */
+    --brand-primary-hover: #8577ff; /* 悬停亮紫 */
+    --brand-accent: #9d8cff; /* 辅助浅紫 */
+    --brand-sky: #38bdf8; /* 点缀天蓝（图表/信息） */
+    --brand-gradient: linear-gradient(
+      135deg,
+      #5b8cff 0%,
+      #6e5bff 48%,
+      #9d6bff 100%
+    ); /* 蓝紫品牌渐变 */
+    --brand-glow-color: rgba(110, 91, 255, 0.25); /* 光晕基色 */
+    --brand-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@layer components {
+  /* 渐变文字：标题 / slogan / 数字强调 */
+  .brand-gradient-text {
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* 渐变底板：主按钮 / 徽标底 / CTA（前景固定白字） */
+  .brand-gradient-bg {
+    background: var(--brand-gradient);
+    color: #ffffff;
+  }
+  .brand-gradient-bg:hover {
+    filter: brightness(1.08);
+  }
+
+  /* 品牌光晕：悬浮强调 */
+  .brand-glow {
+    box-shadow:
+      0 0 24px var(--brand-glow-color),
+      0 0 64px rgba(110, 91, 255, 0.12);
+  }
+  .brand-glow-sm {
+    box-shadow: 0 0 16px rgba(110, 91, 255, 0.2);
+  }
+
+  /* 毛玻璃卡片微交互：悬浮上浮 + 边框点亮 */
+  .brand-card {
+    background: rgba(20, 20, 32, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 124, 255, 0.16);
+    border-radius: calc(var(--radius) * 1.4);
+    transition:
+      transform 150ms var(--brand-ease),
+      border-color 150ms var(--brand-ease),
+      box-shadow 150ms var(--brand-ease);
+  }
+  .brand-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(139, 124, 255, 0.45);
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.4),
+      0 0 24px rgba(110, 91, 255, 0.14);
+  }
+
+  /* 移动端降低 blur 保性能 */
+  @media (max-width: 768px) {
+    .brand-card {
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-card,
+  .brand-card:hover {
+    transition: none;
+    transform: none;
+  }
+}

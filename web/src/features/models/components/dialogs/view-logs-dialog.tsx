@@ -193,7 +193,7 @@ export function ViewLogsDialog({
     )
   } else {
     logsContent = (
-      <div className='font-mono text-sm'>
+      <div className='font-cyber-mono text-sm'>
         {keyedLogLines.map(({ key, line }) => (
           <div key={key} className='whitespace-pre-wrap text-gray-200'>
             {line}
