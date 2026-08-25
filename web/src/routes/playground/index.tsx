@@ -18,7 +18,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { Main, PublicLayout } from '@/components/layout'
+import { AuthenticatedLayout, Main, PublicLayout } from '@/components/layout'
 import { Playground } from '@/features/playground'
 import { isSidebarModuleEnabled } from '@/lib/nav-modules'
 import { useAuthStore } from '@/stores/auth-store'
@@ -36,6 +36,20 @@ export const Route = createFileRoute('/playground/')({
 })
 
 function PlaygroundPage() {
+  const isAuthenticated = useAuthStore((state) => Boolean(state.auth.user))
+
+  // Signed-in users get the console shell (header + sidebar) like every
+  // other console page; anonymous visitors keep the public layout.
+  if (isAuthenticated) {
+    return (
+      <AuthenticatedLayout>
+        <Main className='p-0'>
+          <Playground />
+        </Main>
+      </AuthenticatedLayout>
+    )
+  }
+
   return (
     <PublicLayout showMainContainer={false}>
       <Main className='p-0'>

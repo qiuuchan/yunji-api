@@ -551,6 +551,13 @@ export const STATIC_I18N_KEYS = [
   'The model that was requested',
   'The upstream channel that served the requests',
 
+  // Docs error-code table (meanings passed to t at runtime)
+  'Malformed request body or missing required field.',
+  'Missing, expired, or invalid API token.',
+  'Token lacks access to the requested model or group.',
+  'Too many requests or insufficient quota / balance.',
+  'Upstream or gateway error; safe to retry with backoff.',
+
   // Misc
   'Cancel',
   'Status',

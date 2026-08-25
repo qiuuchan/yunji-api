@@ -26,7 +26,20 @@ import { useChartTheme } from '@/lib/use-chart-theme'
 import { cn } from '@/lib/utils'
 import { VCHART_OPTION } from '@/lib/vchart'
 
-import type { LatencyTimePoint, UptimeDayPoint } from '../lib/mock-stats'
+/** One latency sample in a trend series (timestamped, per group). */
+export type LatencyTimePoint = {
+  timestamp: string
+  group: string
+  ttft_ms: number
+}
+
+/** One availability bucket in an uptime series. */
+export type UptimeDayPoint = {
+  date: string
+  uptime_pct: number
+  incidents: number
+  outage_minutes: number
+}
 
 /** Brand chart palette (cyan, purple, pink, green, amber). */
 const BRAND_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']

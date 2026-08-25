@@ -221,7 +221,9 @@ export function DocsContent() {
                   <td className='text-muted-foreground py-2 pr-4 font-mono'>
                     {row.code}
                   </td>
-                  <td className='text-muted-foreground py-2'>{row.meaning}</td>
+                  <td className='text-muted-foreground py-2'>
+                    {t(row.meaning)}
+                  </td>
                 </tr>
               ))}
             </tbody>

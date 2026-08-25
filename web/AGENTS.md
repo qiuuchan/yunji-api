@@ -77,6 +77,7 @@
 - **TypeScript**：避免 `any`，优先具体类型或 `unknown`；为参数与返回值显式标注类型；仅类型用途的导入使用 `import type { X } from '...'`。
 - **类型检查**：每次改动 TypeScript 或 TSX 代码后都要执行类型检查（如 `bun run typecheck`）；若出现类型错误，须修复至无错误为止，不得遗留。
 - **Lint 检查**：每次完成代码改动前，必须对所涉及文件执行 lint 检查，并修复这些文件中的所有 lint error；不得遗留 error。warning 可按变更范围与风险评估处理。
+- **Lint 门禁 scoped 执行（2026-08-25 明文化）**：全仓 `bun run lint`（`oxlint -c .oxlintrc.json .`）在基线 `20e6d4b8` 上存在上游继承的存量问题（322 error / 84 warning，分布于 ~170 个上游文件），非本期引入、不修上游文件。因此门禁 lint 按**变更文件 scoped** 执行：对本次改动涉及的每个文件运行 `npx oxlint -c .oxlintrc.json <文件...>`（或 `bunx oxlint`），涉及文件的 lint error 必须为 0、不得新增 error；全仓存量红属已知，不阻塞交付。`package.json` 的 lint script 保持不变。
 - **解构**：对象非必要不要进行解构，特别是组件的 props；直接使用 `props.xxx` 更清晰，避免不必要的解构增加代码复杂度。
 
 ### 3.3 组件
@@ -197,3 +198,4 @@
 - **2026-06-21**：在 3.2 中补充「Lint 检查」要求：完成代码改动前须修复所涉及文件的所有 lint error。
 - **2026-08-23**：3.10 改版：赛博霓虹暗色主题 → 品牌暗色设计系统（深色 `#0a0a0f` + 蓝紫 `#6e5bff` 系）；新增 cyber 过渡别名层（桥接策略）与技术债清理约定；品牌工具类集中于 `brand.css`。
 - **2026-08-24**：3.10 更新：D1 命名清理完成，cyber.css 已移除，cyber/neon 过渡别名层表述改为「已清理」状态。
+- **2026-08-25**：3.2 新增「Lint 门禁 scoped 执行」明文章规：门禁 lint 按变更文件 scoped 执行（`oxlint -c .oxlintrc.json <文件...>`），涉及文件 0 新增 error；全仓上游存量 error 已知不修，`package.json` lint script 不动。
