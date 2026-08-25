@@ -127,7 +127,7 @@ export function useModelsColumns(vendors: Vendor[] = []): ColumnDef<Model>[] {
               variant='neutral'
               copyText={name}
               size='sm'
-              className='font-cyber-mono -ml-1.5'
+              className='-ml-1.5 font-mono'
             />
           </div>
         )
@@ -439,7 +439,7 @@ export function useModelsColumns(vendors: Vendor[] = []): ColumnDef<Model>[] {
       cell: ({ row }) => {
         const timestamp = row.getValue('created_time') as number
         return (
-          <div className='font-cyber-mono text-sm whitespace-nowrap'>
+          <div className='font-mono text-sm whitespace-nowrap'>
             {formatTimestampToDate(timestamp)}
           </div>
         )
@@ -455,7 +455,7 @@ export function useModelsColumns(vendors: Vendor[] = []): ColumnDef<Model>[] {
       cell: ({ row }) => {
         const timestamp = row.getValue('updated_time') as number
         return (
-          <div className='font-cyber-mono text-sm whitespace-nowrap'>
+          <div className='font-mono text-sm whitespace-nowrap'>
             {formatTimestampToDate(timestamp)}
           </div>
         )

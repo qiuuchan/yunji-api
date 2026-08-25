@@ -20,12 +20,12 @@ For commercial licensing, please contact support@quantumnous.com
    Brand Design System — 品牌设计系统工具层
    mimo 风：深色 #0a0a0f + 蓝紫渐变 #6e5bff 系 + 毛玻璃。
    本文件承载品牌专属 token、GeistMono @font-face 与 brand-*
-   工具类；历史 cyber/neon 命名的兼容取值见 cyber.css（过渡
-   别名层，二期清理命名）。
+   工具类与全局品牌元素样式（滚动条 / 焦点态 / 选区 / body
+   基础字重等）。全局品牌元素样式在此集中维护。
    ============================================================ */
 
-/* GeistMono 等宽字体（自 cyber.css 接管，供 font-cyber-mono /
- * --font-mono 使用；相对路径引用 src/assets，由 Rsbuild 哈希打包） */
+/* GeistMono 等宽字体（品牌等宽字体源；供 --font-mono 使用；
+ * 相对路径引用 src/assets，由 Rsbuild 哈希打包） */
 @font-face {
   font-family: 'GeistMono';
   src: url('../assets/fonts/GeistMono-Variable.woff2') format('woff2');
@@ -49,6 +49,46 @@ For commercial licensing, please contact support@quantumnous.com
     ); /* 蓝紫品牌渐变 */
     --brand-glow-color: rgba(110, 91, 255, 0.25); /* 光晕基色 */
     --brand-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* body 基础字重与抗锯齿补充（背景/文字/字体族由 index.css 的 body 覆盖） */
+  body {
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ---- 蓝紫细线滚动条 ---- */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(110, 91, 255, 0.25);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(110, 91, 255, 0.55);
+    box-shadow: 0 0 8px rgba(110, 91, 255, 0.35);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(110, 91, 255, 0.3) transparent;
+  }
+
+  /* 键盘焦点 = 发光聚焦态（无障碍） */
+  :focus-visible {
+    outline: 1px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 12px rgba(110, 91, 255, 0.35);
+  }
+
+  ::selection {
+    background: rgba(110, 91, 255, 0.25);
+    color: #fff;
   }
 }
 
@@ -107,6 +147,71 @@ For commercial licensing, please contact support@quantumnous.com
       -webkit-backdrop-filter: blur(6px);
     }
   }
+
+  /* ---- 文字发光（品牌体系工具类） ---- */
+  .brand-glow-text {
+    color: var(--primary);
+    text-shadow:
+      0 0 8px rgba(110, 91, 255, 0.6),
+      0 0 24px rgba(110, 91, 255, 0.25);
+  }
+
+  /* ---- 状态标签（圆点 + 文字；品牌体系 badge 工具类） ---- */
+  .brand-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid;
+    font-family: 'GeistMono', 'PingFang SC', monospace;
+    white-space: nowrap;
+  }
+  .brand-tag .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow:
+      0 0 6px currentColor,
+      0 0 12px currentColor;
+  }
+  .brand-tag-cyan {
+    color: var(--primary);
+    border-color: rgba(110, 91, 255, 0.4);
+    background: rgba(110, 91, 255, 0.07);
+    text-shadow: 0 0 8px rgba(110, 91, 255, 0.5);
+  }
+  .brand-tag-green {
+    color: var(--success);
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.07);
+    text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+  }
+  .brand-tag-pink {
+    color: var(--destructive);
+    border-color: rgba(255, 93, 143, 0.4);
+    background: rgba(255, 93, 143, 0.07);
+    text-shadow: 0 0 8px rgba(255, 93, 143, 0.5);
+  }
+  .brand-tag-purple {
+    color: var(--brand-accent);
+    border-color: rgba(157, 140, 255, 0.4);
+    background: rgba(157, 140, 255, 0.07);
+    text-shadow: 0 0 8px rgba(157, 140, 255, 0.5);
+  }
+  .brand-tag-amber {
+    color: var(--warning);
+    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(251, 191, 36, 0.07);
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+  }
+  .brand-tag-gray {
+    color: var(--muted-foreground);
+    border-color: rgba(154, 161, 181, 0.35);
+    background: rgba(154, 161, 181, 0.07);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -114,5 +219,30 @@ For commercial licensing, please contact support@quantumnous.com
   .brand-card:hover {
     transition: none;
     transform: none;
+  }
+}
+
+/* ============================================================
+   Keyframes — 品牌动画（不进 layer，与现状一致）
+   ============================================================ */
+@keyframes brand-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes brand-pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 14px rgba(110, 91, 255, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 28px rgba(110, 91, 255, 0.8),
+      0 0 56px rgba(110, 91, 255, 0.3);
   }
 }

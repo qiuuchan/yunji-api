@@ -38,12 +38,12 @@ type TooltipLineItem = {
 }
 
 export function getDashboardChartColors(domainLength: number): string[] {
-  const NEON_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
+  const BRAND_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
 
-  // Cycle the neon 5-color set so every series maps to a neon hue.
+  // Cycle the brand 5-color set so every series maps to a brand hue.
   const colors: string[] = []
   for (let i = 0; i < domainLength; i++) {
-    colors.push(NEON_PALETTE[i % NEON_PALETTE.length])
+    colors.push(BRAND_PALETTE[i % BRAND_PALETTE.length])
   }
   return colors
 }

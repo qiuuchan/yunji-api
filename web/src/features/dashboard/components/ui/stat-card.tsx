@@ -90,7 +90,7 @@ const DETAIL_TONE_CLASSES: Record<StatCardDetailTone, string> = {
 }
 
 const VALUE_TONE_CLASSES: Record<StatCardTone, string> = {
-  'accent-1': 'text-primary glow-cyan',
+  'accent-1': 'text-primary brand-glow-text',
   'accent-2': 'text-accent',
   'accent-3': 'text-success',
 }
@@ -317,7 +317,7 @@ export function StatCard(props: StatCardProps) {
   return (
     <div
       className={cn(
-        'glass-panel group flex flex-col justify-between rounded-xl p-3 sm:min-h-32 sm:gap-3 sm:p-4',
+        'brand-card group flex flex-col justify-between rounded-xl p-3 sm:min-h-32 sm:gap-3 sm:p-4',
         props.compactMobile ? 'gap-1' : 'gap-1.5'
       )}
     >

@@ -18,13 +18,17 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { Main } from '@/components/layout'
+import { Main, PublicLayout } from '@/components/layout'
 import { Playground } from '@/features/playground'
 import { isSidebarModuleEnabled } from '@/lib/nav-modules'
+import { useAuthStore } from '@/stores/auth-store'
 
-export const Route = createFileRoute('/_authenticated/playground/')({
+export const Route = createFileRoute('/playground/')({
   beforeLoad: () => {
-    if (!isSidebarModuleEnabled('chat', 'playground')) {
+    // Authenticated users still respect the sidebar module switch.
+    // Anonymous visitors are always allowed (the page is public).
+    const isAuthenticated = Boolean(useAuthStore.getState().auth.user)
+    if (isAuthenticated && !isSidebarModuleEnabled('chat', 'playground')) {
       throw redirect({ to: '/dashboard' })
     }
   },
@@ -33,8 +37,10 @@ export const Route = createFileRoute('/_authenticated/playground/')({
 
 function PlaygroundPage() {
   return (
-    <Main className='p-0'>
-      <Playground />
-    </Main>
+    <PublicLayout showMainContainer={false}>
+      <Main className='p-0'>
+        <Playground />
+      </Main>
+    </PublicLayout>
   )
 }

@@ -35,7 +35,7 @@ type ThemeProviderState = {
   resetTheme: () => void
 }
 
-/* 赛博雨幕主题为固定暗色，不再提供明暗切换/预设/字体轴。
+/* 品牌暗色主题为固定暗色，不再提供明暗切换/预设/字体轴。
  * 保留 useTheme API（resolvedTheme 恒为 'dark'），使 sonner、
  * use-chart-theme 与图表组件等消费方零改动。 */
 const initialState: ThemeProviderState = {

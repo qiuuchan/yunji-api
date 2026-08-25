@@ -16,10 +16,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
+import { Link } from '@tanstack/react-router'
 import {
   BarChartIcon,
   CodeSquareIcon,
   GraduationCapIcon,
+  LogInIcon,
   MessageSquarePlusIcon,
   NotepadTextIcon,
 } from 'lucide-react'
@@ -29,6 +31,7 @@ import { Button } from '@/components/ui/button'
 
 type PlaygroundEmptyStateProps = {
   onSelectPrompt: (prompt: string) => void
+  isAnonymous?: boolean
 }
 
 const starterPrompts = [
@@ -40,6 +43,7 @@ const starterPrompts = [
 
 export function PlaygroundEmptyState({
   onSelectPrompt,
+  isAnonymous = false,
 }: PlaygroundEmptyStateProps) {
   const { t } = useTranslation()
 
@@ -78,6 +82,26 @@ export function PlaygroundEmptyState({
             )
           })}
         </div>
+
+        {isAnonymous ? (
+          <div className='brand-card mx-auto mt-2 flex w-full max-w-lg flex-col items-center gap-3 rounded-xl border px-4 py-4 sm:flex-row sm:justify-between sm:text-left'>
+            <p className='text-sm leading-6 text-balance'>
+              {t('Start chatting after you sign in')}
+            </p>
+            <Button
+              className='shrink-0 gap-2'
+              render={
+                <Link
+                  to='/sign-in'
+                  search={{ redirect: window.location.href }}
+                />
+              }
+            >
+              <LogInIcon className='size-4' aria-hidden='true' />
+              {t('Sign in')}
+            </Button>
+          </div>
+        ) : null}
       </div>
     </div>
   )

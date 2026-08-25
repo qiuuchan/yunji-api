@@ -662,6 +662,23 @@ func GetUserModels(c *gin.Context) {
 	})
 }
 
+// GetPublicPlaygroundModels returns the full set of models enabled across all
+// usable groups for anonymous visitors of the playground. It deliberately
+// carries no user context (no UserAuth / TryUserAuth), so it queries the
+// global usable groups with an empty user group.
+func GetPublicPlaygroundModels(c *gin.Context) {
+	groups := service.GetUserUsableGroups("")
+	var groupsToQuery []string
+	for g := range groups {
+		groupsToQuery = append(groupsToQuery, g)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    service.GetGroupsEnabledModels(groupsToQuery),
+	})
+}
+
 func UpdateUser(c *gin.Context) {
 	var updatedUser model.User
 	err := common.DecodeJson(c.Request.Body, &updatedUser)

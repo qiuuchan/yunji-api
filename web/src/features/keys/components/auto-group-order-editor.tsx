@@ -97,7 +97,7 @@ function AutoGroupOrderItem(props: AutoGroupOrderItemProps) {
         type='button'
         variant='ghost'
         size='icon-sm'
-        className='text-muted-foreground font-cyber-mono cursor-grab touch-none active:cursor-grabbing'
+        className='text-muted-foreground cursor-grab touch-none font-mono active:cursor-grabbing'
         aria-label={t('Drag {{group}} to reorder', { group: props.group })}
         onPointerDown={handleDragStart}
         onKeyDown={handleDragKeyDown}

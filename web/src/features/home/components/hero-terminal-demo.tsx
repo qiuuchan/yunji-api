@@ -210,7 +210,7 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
     <div className={cn('mx-auto w-full max-w-2xl', props.className)}>
       <div
         className={cn(
-          'glass-panel overflow-hidden rounded-2xl',
+          'brand-card overflow-hidden rounded-2xl',
           'shadow-[0_0_30px_rgba(110,91,255,0.15)]'
         )}
       >
@@ -242,7 +242,7 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
           })}
           <div className='ml-auto flex items-center gap-2 pr-2 sm:pr-3'>
             <span className='bg-success inline-block size-1.5 rounded-full shadow-[0_0_8px_rgba(57,255,136,0.45)]' />
-            <span className='text-foreground/40 font-cyber-mono text-[10px] tracking-wider uppercase'>
+            <span className='text-foreground/40 font-mono text-[10px] tracking-wider uppercase'>
               200 ok
             </span>
           </div>
@@ -257,7 +257,7 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
         >
           <span
             className={cn(
-              'rounded-md px-1.5 py-0.5 font-cyber-mono text-[10px] font-semibold tracking-wider',
+              'rounded-md px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider',
               accent.badge
             )}
           >
@@ -265,7 +265,7 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
           </span>
           <code
             className={cn(
-              'text-foreground/75 truncate font-cyber-mono text-[12.5px] transition-opacity duration-200',
+              'text-foreground/75 truncate font-mono text-[12.5px] transition-opacity duration-200',
               transitioning ? 'opacity-0' : 'opacity-100'
             )}
           >
@@ -274,7 +274,7 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
         </div>
 
         {/* Body — fixed rows so neither block shifts when switching demos */}
-        <div className='font-cyber-mono grid h-[400px] grid-rows-[235px_minmax(0,1fr)] text-[12.5px] leading-[1.55]'>
+        <div className='grid h-[400px] grid-rows-[235px_minmax(0,1fr)] font-mono text-[12.5px] leading-[1.55]'>
           {/* Request */}
           <RequestBlock demo={demo} transitioning={transitioning} />
 
@@ -291,23 +291,23 @@ export function HeroTerminalDemo(props: HeroTerminalDemoProps) {
         >
           <div className='text-foreground/40 flex items-center gap-3 text-[10px] tabular-nums'>
             <span className='flex items-center gap-1'>
-              <span className='font-cyber-mono'>{demo.latency}</span>
+              <span className='font-mono'>{demo.latency}</span>
               <span className='tracking-wider uppercase'>ms</span>
             </span>
             <span className='bg-foreground/15 size-1 rounded-full' />
             <span className='flex items-center gap-1'>
-              <span className='font-cyber-mono'>{demo.tokens}</span>
+              <span className='font-mono'>{demo.tokens}</span>
               <span className='tracking-wider uppercase'>tokens</span>
             </span>
             <span className='bg-foreground/15 size-1 rounded-full' />
             <span className='flex items-center gap-1'>
               <span className='tracking-wider uppercase'>cost</span>
-              <span className='font-cyber-mono'>
+              <span className='font-mono'>
                 ${(demo.tokens * 0.00003).toFixed(5)}
               </span>
             </span>
           </div>
-          <span className='text-foreground/30 font-cyber-mono text-[10px] tracking-wider uppercase'>
+          <span className='text-foreground/30 font-mono text-[10px] tracking-wider uppercase'>
             stream · sse
           </span>
         </div>

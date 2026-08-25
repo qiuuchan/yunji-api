@@ -20,6 +20,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+import { useAuthStore } from '@/stores/auth-store'
+
 import { sendChatCompletion } from '../api'
 import { ERROR_MESSAGES } from '../constants'
 import {
@@ -41,6 +43,7 @@ interface UseChatHandlerOptions {
   config: PlaygroundConfig
   parameterEnabled: ParameterEnabled
   onMessageUpdate: (updater: (prev: Message[]) => Message[]) => void
+  requireLogin?: () => void
 }
 
 const KNOWN_ERROR_MESSAGES = new Set<string>(Object.values(ERROR_MESSAGES))
@@ -70,6 +73,7 @@ export function useChatHandler({
   config,
   parameterEnabled,
   onMessageUpdate,
+  requireLogin,
 }: UseChatHandlerOptions) {
   const { t } = useTranslation()
   const { sendStreamRequest, stopStream, isStreaming } = useStreamRequest()
@@ -348,13 +352,18 @@ export function useChatHandler({
   // Send chat request (stream or non-stream based on config)
   const sendChat = useCallback(
     (messages: Message[]) => {
+      const isAuthenticated = Boolean(useAuthStore.getState().auth.user)
+      if (!isAuthenticated) {
+        requireLogin?.()
+        return
+      }
       if (config.stream) {
         sendStreamingChat(messages)
       } else {
         sendNonStreamingChat(messages)
       }
     },
-    [config.stream, sendStreamingChat, sendNonStreamingChat]
+    [config.stream, sendStreamingChat, sendNonStreamingChat, requireLogin]
   )
 
   // Stop generation

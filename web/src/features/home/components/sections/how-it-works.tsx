@@ -100,7 +100,7 @@ export function HowItWorks() {
             {SDK_LANGUAGES.map((lang) => (
               <span
                 key={lang}
-                className='border-border/50 bg-muted/20 text-foreground/80 font-cyber-mono rounded-lg border px-3.5 py-1.5 text-xs'
+                className='border-border/50 bg-muted/20 text-foreground/80 rounded-lg border px-3.5 py-1.5 font-mono text-xs'
               >
                 {lang}
               </span>

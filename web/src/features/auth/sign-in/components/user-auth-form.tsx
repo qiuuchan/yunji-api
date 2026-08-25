@@ -404,7 +404,7 @@ export function UserAuthForm({
             {/* Submit Button */}
             <Button
               type='submit'
-              className='glow-cyan mt-2 w-full animate-[cyber-pulse-glow_2.4s_ease-in-out_infinite] justify-center gap-2'
+              className='brand-glow-text mt-2 w-full animate-[brand-pulse-glow_2.4s_ease-in-out_infinite] justify-center gap-2'
               disabled={isLoading || (requiresLegalConsent && !agreedToLegal)}
             >
               {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}

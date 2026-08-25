@@ -28,12 +28,9 @@ For commercial licensing, please contact support@quantumnous.com
 @import '@fontsource-variable/lora';
 
 @import './theme.css';
-/* cyber 过渡别名层：保留历史 --cyber-* 变量与 neon-* / glass-panel /
- * font-cyber-mono 等类名（桥接策略，值为蓝紫新配色），使既有引用零改动
- * 整体换肤。桥接命名是有意保留的技术债，二期统一清理命名后移除本文件。
+/* 品牌设计系统工具层：GeistMono @font-face、brand-* 工具类、品牌 token
+ * 与全局品牌元素样式（滚动条 / 焦点态 / 选区 / body 基础字重）。
  * 必须在 theme.css 之后引入，保持既有级联顺序。 */
-@import './cyber.css';
-/* 品牌设计系统工具层：GeistMono @font-face、brand-* 工具类与品牌 token。 */
 @import './brand.css';
 
 /* Shiki dual themes: token colors follow dark theme (pre background stays `bg-background` on the block) */

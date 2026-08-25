@@ -40,15 +40,15 @@ const badgeVariants = cva(
         ghost:
           'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
         link: 'text-primary underline-offset-4 hover:underline',
-        cyan: 'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-cyan',
+        cyan: 'bg-transparent shadow-none border-0 p-0 brand-tag brand-tag-cyan',
         green:
-          'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-green',
-        pink: 'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-pink',
+          'bg-transparent shadow-none border-0 p-0 brand-tag brand-tag-green',
+        pink: 'bg-transparent shadow-none border-0 p-0 brand-tag brand-tag-pink',
         purple:
-          'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-purple',
+          'bg-transparent shadow-none border-0 p-0 brand-tag brand-tag-purple',
         amber:
-          'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-amber',
-        gray: 'bg-transparent shadow-none border-0 p-0 neon-tag neon-tag-gray',
+          'bg-transparent shadow-none border-0 p-0 brand-tag brand-tag-amber',
+        gray: 'bg-transparent shadow-none border-0 p-0 brand-tag brand-tag-gray',
       },
     },
     defaultVariants: {

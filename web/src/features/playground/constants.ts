@@ -37,6 +37,7 @@ export const API_ENDPOINTS = {
   CHAT_COMPLETIONS: '/pg/chat/completions',
   USER_MODELS: '/api/user/models',
   USER_GROUPS: '/api/user/self/groups',
+  PUBLIC_MODELS: '/api/pg/models',
 } as const
 
 // Default group — uses 'default' as the safe fallback; auto-group is
@@ -70,6 +71,7 @@ export const STORAGE_KEYS = {
   CONFIG: 'playground_config',
   MESSAGES: 'playground_messages',
   PARAMETER_ENABLED: 'playground_parameter_enabled',
+  INPUT_DRAFT: 'playground_input_draft',
 } as const
 
 // Error messages

@@ -80,3 +80,25 @@ export async function getUserGroups(): Promise<GroupOption[]> {
     desc: info.desc,
   }))
 }
+
+/**
+ * Get public playground models (no authentication required).
+ * Mirrors the shape of getUserModels and is used to render the
+ * model selector for anonymous visitors.
+ */
+export async function getPublicPlaygroundModels(): Promise<ModelOption[]> {
+  const res = await api.get(API_ENDPOINTS.PUBLIC_MODELS, {
+    skipAuthRefresh: true,
+    skipErrorHandler: true,
+  } as Record<string, unknown>)
+  const { data } = res
+
+  if (!data.success || !Array.isArray(data.data)) {
+    return []
+  }
+
+  return data.data.map((model: string) => ({
+    label: model,
+    value: model,
+  }))
+}

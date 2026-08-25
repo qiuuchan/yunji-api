@@ -28,8 +28,8 @@ import { VCHART_OPTION } from '@/lib/vchart'
 
 import type { LatencyTimePoint, UptimeDayPoint } from '../lib/mock-stats'
 
-/** Neon chart palette (cyan, purple, pink, green, amber). */
-const NEON_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
+/** Brand chart palette (cyan, purple, pink, green, amber). */
+const BRAND_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
 
 function formatHourLabel(iso: string): string {
   const date = new Date(iso)
@@ -116,7 +116,7 @@ export function LatencyTrendChart(props: {
       xField: 'time',
       yField: 'ttft',
       seriesField: 'group',
-      color: NEON_PALETTE,
+      color: BRAND_PALETTE,
       smooth: true,
       point: {
         visible: true,
@@ -329,8 +329,8 @@ export function ThroughputBarChart(props: {
   const { t } = useTranslation()
   const { resolvedTheme, themeReady } = useChartTheme()
   const { textColor, gridColor } = getChartThemeTokens(resolvedTheme)
-  // 固定赛博暗色主题：半径缓存键不再随预设变化。
-  const barRadius = useThemeRadiusPx('--radius-sm', 'cyber:4px')
+  // 固定品牌暗色主题：半径缓存键不再随预设变化。
+  const barRadius = useThemeRadiusPx('--radius-sm', 'brand:4px')
 
   const filtered = useMemo(
     () => props.rows.filter((r) => r.throughput_tps > 0),

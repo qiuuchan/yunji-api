@@ -39,7 +39,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-import { getUserGroups, getUserModels } from '../api'
+import { getUserGroups, getUserModels, getPublicPlaygroundModels } from '../api'
 import {
   getGroupFallback,
   getModelFallback,
@@ -51,6 +51,7 @@ import type { GroupOption, ModelOption, PlaygroundConfig } from '../types'
 type UsePlaygroundOptionsParams = {
   currentGroup: string
   currentModel: string
+  isAuthenticated: boolean
   setGroups: (groups: GroupOption[]) => void
   setModels: (models: ModelOption[]) => void
   updateConfig: <K extends keyof PlaygroundConfig>(
@@ -62,6 +63,7 @@ type UsePlaygroundOptionsParams = {
 export function usePlaygroundOptions({
   currentGroup,
   currentModel,
+  isAuthenticated,
   setGroups,
   setModels,
   updateConfig,
@@ -74,9 +76,13 @@ export function usePlaygroundOptions({
     isError: isModelsError,
     isLoading: isLoadingModels,
   } = useQuery({
-    queryKey: ['playground-models', currentGroup],
-    queryFn: () => getUserModels(currentGroup),
-    enabled: currentGroup !== '',
+    queryKey: isAuthenticated
+      ? ['playground-models', currentGroup]
+      : ['playground-models', 'public'],
+    queryFn: isAuthenticated
+      ? () => getUserModels(currentGroup)
+      : getPublicPlaygroundModels,
+    enabled: isAuthenticated ? currentGroup !== '' : true,
   })
 
   const {
@@ -86,6 +92,7 @@ export function usePlaygroundOptions({
   } = useQuery({
     queryKey: ['playground-groups'],
     queryFn: getUserGroups,
+    enabled: isAuthenticated,
   })
 
   useEffect(() => {
@@ -94,10 +101,12 @@ export function usePlaygroundOptions({
     toast.error(
       getOptionLoadErrorMessage(
         modelsError,
-        t('Failed to load playground models')
+        isAuthenticated
+          ? t('Failed to load playground models')
+          : t('Failed to load public playground models')
       )
     )
-  }, [isModelsError, modelsError, t])
+  }, [isModelsError, modelsError, t, isAuthenticated])
 
   useEffect(() => {
     if (!isGroupsError) return

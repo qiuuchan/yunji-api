@@ -16,6 +16,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
+import { useNavigate } from '@tanstack/react-router'
+import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+
+import { useAuthStore } from '@/stores/auth-store'
+
 import { PlaygroundChat } from './components/chat/playground-chat'
 import { PlaygroundInput } from './components/input/playground-input'
 import {
@@ -26,6 +33,10 @@ import {
 } from './hooks'
 
 export function Playground() {
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+  const isAuthenticated = useAuthStore((state) => Boolean(state.auth.user))
+
   const {
     config,
     parameterEnabled,
@@ -41,10 +52,19 @@ export function Playground() {
     clearMessages,
   } = usePlaygroundState()
 
+  const requireLogin = useCallback(() => {
+    toast.error(t('Sign in to start a playground conversation'))
+    void navigate({
+      to: '/sign-in',
+      search: { redirect: window.location.href },
+    })
+  }, [navigate, t])
+
   const { sendChat, stopGeneration, isGenerating } = useChatHandler({
     config,
     parameterEnabled,
     onMessageUpdate: updateMessages,
+    requireLogin,
   })
 
   const {
@@ -61,6 +81,22 @@ export function Playground() {
     sendChat,
   })
 
+  // Anonymous send attempts must not append messages or clear the input
+  // draft: returning false tells PlaygroundInput to keep both, while
+  // requireLogin redirects to sign-in. sendChat keeps its own anonymous
+  // interception as a defensive fallback below this guard.
+  const guardSendMessage = useCallback(
+    (text: string): boolean => {
+      if (!isAuthenticated) {
+        requireLogin()
+        return false
+      }
+      handleSendMessage(text)
+      return true
+    },
+    [isAuthenticated, requireLogin, handleSendMessage]
+  )
+
   const handleClearMessages = () => {
     handleEditOpenChange(false)
     clearMessages()
@@ -69,6 +105,7 @@ export function Playground() {
   const { isLoadingModels } = usePlaygroundOptions({
     currentGroup: config.group,
     currentModel: config.model,
+    isAuthenticated,
     setGroups,
     setModels,
     updateConfig,
@@ -84,12 +121,13 @@ export function Playground() {
           onRegenerateMessage={handleRegenerateMessage}
           onEditMessage={handleEditMessage}
           onDeleteMessage={handleDeleteMessage}
-          onSelectPrompt={handleSendMessage}
+          onSelectPrompt={guardSendMessage}
           isGenerating={isGenerating}
           editingKey={editingMessageKey}
           onCancelEdit={handleEditOpenChange}
           onSaveEdit={(newContent) => applyEdit(newContent, false)}
           onSaveEditAndSubmit={(newContent) => applyEdit(newContent, true)}
+          isAnonymous={!isAuthenticated}
         />
       </div>
 
@@ -110,7 +148,7 @@ export function Playground() {
           onModelChange={(value) => updateConfig('model', value)}
           onParameterEnabledChange={updateParameterEnabled}
           onStop={stopGeneration}
-          onSubmit={handleSendMessage}
+          onSubmit={guardSendMessage}
           parameterEnabled={parameterEnabled}
           hasMessages={messages.length > 0}
         />

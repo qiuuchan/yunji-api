@@ -76,7 +76,7 @@ export function MissingModelsConfirmationDialog({
                 'The following models in the model redirect have not been added to the "Models" list and may fail during invocation due to missing available models:'
               )}
             </div>
-            <div className='bg-destructive/10 border-destructive/40 font-cyber-mono text-destructive rounded-md border p-2 text-xs break-all'>
+            <div className='bg-destructive/10 border-destructive/40 text-destructive rounded-md border p-2 font-mono text-xs break-all'>
               {missingModels.join(', ')}
             </div>
             <div>

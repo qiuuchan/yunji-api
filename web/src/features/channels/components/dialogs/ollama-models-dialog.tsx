@@ -530,7 +530,7 @@ export function OllamaModelsDialog({
                               aria-label={`Select model ${m.id}`}
                             />
                             <div className='min-w-0'>
-                              <div className='font-cyber-mono truncate text-sm'>
+                              <div className='truncate font-mono text-sm'>
                                 {m.id}
                               </div>
                               <div className='text-muted-foreground flex flex-wrap gap-x-3 gap-y-1 text-xs'>

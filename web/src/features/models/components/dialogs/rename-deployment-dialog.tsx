@@ -132,7 +132,7 @@ export function RenameDeploymentDialog({
       <div className='space-y-2'>
         <div className='text-muted-foreground text-sm'>
           {t('Deployment ID')}:{' '}
-          <span className='font-cyber-mono'>{deploymentId}</span>
+          <span className='font-mono'>{deploymentId}</span>
         </div>
         <Input
           placeholder={t('Enter a new name')}

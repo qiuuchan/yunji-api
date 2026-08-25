@@ -586,7 +586,7 @@ function RateLimitGroupSection(props: RateLimitGroupSectionProps) {
           <span className='text-muted-foreground text-[11px]'>
             metered_feature
           </span>
-          <span className='font-cyber-mono min-w-0 break-all'>
+          <span className='min-w-0 font-mono break-all'>
             {props.meteredFeature}
           </span>
         </div>
@@ -625,7 +625,7 @@ function InfoField(props: {
         <span
           className={cn(
             'min-w-0 flex-1 text-xs leading-5 break-all',
-            props.mono && 'font-cyber-mono tabular-nums'
+            props.mono && 'font-mono tabular-nums'
           )}
         >
           {text || '-'}
@@ -697,7 +697,7 @@ function ResetCreditItem(props: { credit: CodexResetCredit; index: number }) {
             </div>
           ) : null}
           {props.credit.id ? (
-            <div className='text-muted-foreground font-cyber-mono mt-1 text-[11px] break-all'>
+            <div className='text-muted-foreground mt-1 font-mono text-[11px] break-all'>
               {props.credit.id}
             </div>
           ) : null}

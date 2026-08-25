@@ -60,8 +60,8 @@ export function ConsumptionDistributionChart(
 ) {
   const { t } = useTranslation()
   const { resolvedTheme } = useTheme()
-  // 固定赛博暗色主题：半径缓存键不再随预设变化。
-  const chartRadius = useThemeRadiusPx('--radius-md', 'cyber:4px')
+  // 固定品牌暗色主题：半径缓存键不再随预设变化。
+  const chartRadius = useThemeRadiusPx('--radius-md', 'brand:4px')
   const [chartType, setChartType] = useState<ConsumptionDistributionChartType>(
     props.defaultChartType ?? 'bar'
   )
@@ -112,7 +112,7 @@ export function ConsumptionDistributionChart(
     props.loading ? 'loading' : 'ready',
     props.data.length,
     resolvedTheme,
-    'cyber',
+    'brand',
   ].join('-')
 
   return (

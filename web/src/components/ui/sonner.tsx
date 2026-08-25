@@ -77,20 +77,20 @@ const Toaster = (props: ToasterProps) => {
       style={
         {
           '--normal-bg': 'rgba(14,14,22,0.92)',
-          '--normal-text': 'var(--cyber-text)',
+          '--normal-text': 'var(--foreground)',
           '--normal-border': 'rgba(110,91,255,0.18)',
           '--success-bg': 'rgba(14,14,22,0.92)',
           '--success-border': 'rgba(57,255,136,0.45)',
-          '--success-text': 'var(--cyber-green)',
+          '--success-text': 'var(--success)',
           '--info-bg': 'rgba(14,14,22,0.92)',
           '--info-border': 'rgba(110,91,255,0.45)',
-          '--info-text': 'var(--cyber-cyan)',
+          '--info-text': 'var(--primary)',
           '--warning-bg': 'rgba(14,14,22,0.92)',
           '--warning-border': 'rgba(255,179,71,0.45)',
-          '--warning-text': 'var(--cyber-amber)',
+          '--warning-text': 'var(--warning)',
           '--error-bg': 'rgba(14,14,22,0.92)',
           '--error-border': 'rgba(255,46,136,0.45)',
-          '--error-text': 'var(--cyber-pink)',
+          '--error-text': 'var(--destructive)',
           '--border-radius': 'var(--radius)',
         } as React.CSSProperties
       }

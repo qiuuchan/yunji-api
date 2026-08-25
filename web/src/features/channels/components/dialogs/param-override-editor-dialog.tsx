@@ -2292,7 +2292,7 @@ function RuleEditor(ruleEditorProps: RuleEditorProps) {
                 }
                 placeholder={getModeValuePlaceholder(mode)}
                 rows={3}
-                className='font-cyber-mono max-h-[200px] resize-y overflow-y-auto text-xs'
+                className='max-h-[200px] resize-y overflow-y-auto font-mono text-xs'
               />
             </div>
           ))}

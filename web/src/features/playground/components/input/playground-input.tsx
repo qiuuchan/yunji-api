@@ -16,7 +16,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -26,7 +26,12 @@ import {
   type PromptInputMessage,
 } from '@/components/ai-elements/prompt-input'
 
-import { getSubmittableInputText } from '../../lib'
+import {
+  clearInputDraft,
+  getSubmittableInputText,
+  loadInputDraft,
+  saveInputDraft,
+} from '../../lib'
 import type {
   ModelOption,
   GroupOption,
@@ -38,7 +43,9 @@ import { PlaygroundInputTools } from './playground-input-tools'
 
 interface PlaygroundInputProps {
   config: PlaygroundConfig
-  onSubmit: (text: string) => void
+  // Returning false vetoes the submission: the draft and the input text
+  // are kept (used for the anonymous sign-in redirect).
+  onSubmit: (text: string) => boolean | void
   onStop?: () => void
   disabled?: boolean
   isGenerating?: boolean
@@ -84,11 +91,24 @@ export function PlaygroundInput({
   const { t } = useTranslation()
   const [text, setText] = useState('')
 
+  useEffect(() => {
+    const draft = loadInputDraft()
+    if (draft) {
+      setText(draft)
+    }
+  }, [])
+
+  const handleChange = (value: string) => {
+    setText(value)
+    saveInputDraft(value)
+  }
+
   const handleSubmit = (message: PromptInputMessage) => {
     const submittableText = getSubmittableInputText(message, disabled)
 
     if (!submittableText) return
-    onSubmit(submittableText)
+    if (onSubmit(submittableText) === false) return
+    clearInputDraft()
     setText('')
   }
 
@@ -106,7 +126,7 @@ export function PlaygroundInput({
           spellCheck={false}
           className='min-h-20 px-5 pt-4 pb-3 leading-7 md:min-h-24 md:text-base'
           disabled={disabled}
-          onChange={(event) => setText(event.target.value)}
+          onChange={(event) => handleChange(event.target.value)}
           placeholder={t('Ask anything')}
           value={text}
         />

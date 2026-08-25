@@ -125,7 +125,7 @@
 - 以 Tailwind 工具类为主，动态类名用 `cn()` 合并；非动态场景避免内联样式。
 - 响应式采用移动优先与 Tailwind 断点（`sm:`、`md:`、`lg:` 等）；主题与暗色用 CSS 变量与 `dark:`，自定义样式集中在 `src/styles/`，组件内尽量少写自定义 CSS。
 - **品牌暗色主题（mimo 风）固定 dark 配色**：全站为纯暗色品牌主题（深色 `#0a0a0f` 底 + 蓝紫主色 `#6e5bff` 系渐变 + 毛玻璃），明暗切换与主题预设系统已移除，`useTheme()` 恒返 `'dark'`。语义 token（`--background`/`--primary` 等）集中在 `src/styles/theme.css` 的 `@theme inline` 与 `:root,.dark` 块；品牌专属 token、GeistMono `@font-face` 与新工具类（`.brand-gradient-text` / `.brand-gradient-bg` / `.brand-glow` / `.brand-card` 等）集中在 `src/styles/brand.css`。新增组件优先使用语义 token 与 brand 工具类，避免引入明/暗分支或主题预设逻辑。
-- **cyber 过渡别名层（有意保留的技术债）**：第一期换肤采用「桥接」策略——历史赛博命名（`--cyber-*` 变量、`neon-*`、`glass-panel`、`font-cyber-mono` 等类名）在 `src/styles/cyber.css` 中保留原名、值已全部替换为蓝紫品牌配色，使既有引用零改动整体换肤；数字雨背景组件、全屏扫描线 overlay、glitch 故障艺术等特效本体已删除。**桥接命名是有意保留的技术债，二期必须统一清理命名（cyber/neon → brand）并同步改写全部引用点后移除 cyber.css**。禁止在新代码中新增对 `cyber-*` / `neon-*` 命名的引用；存量引用随二期清理逐步收敛。
+- **命名清理（2026-08-24 已完成）**：一期「桥接策略」遗留的 cyber/neon 命名已在二期 D1 全部清理——`src/styles/cyber.css` 已删除，历史类名（`glass-panel`、`neon-tag`、`glow-cyan`、`font-cyber-mono`）统一为 brand 体系（`brand-card`、`brand-tag`、`brand-glow-text`、Tailwind `font-mono`），`--cyber-*` 变量映射为语义 token（`--primary`/`--success`/`--warning`/`--destructive`/`--brand-accent` 等）。**禁止在新代码中新增 `cyber-*` / `neon-*` 命名**；全局品牌元素样式（滚动条 / 焦点态 / 选区 / body 字重）与品牌工具类集中维护于 `brand.css`。
 
 ### 3.11 文件组织
 
@@ -196,3 +196,4 @@
 - **2026-01-31**：在 3.2 中补充「类型检查」要求：改动 TS/TSX 后须执行 typecheck 并修复至无错。
 - **2026-06-21**：在 3.2 中补充「Lint 检查」要求：完成代码改动前须修复所涉及文件的所有 lint error。
 - **2026-08-23**：3.10 改版：赛博霓虹暗色主题 → 品牌暗色设计系统（深色 `#0a0a0f` + 蓝紫 `#6e5bff` 系）；新增 cyber 过渡别名层（桥接策略）与技术债清理约定；品牌工具类集中于 `brand.css`。
+- **2026-08-24**：3.10 更新：D1 命名清理完成，cyber.css 已移除，cyber/neon 过渡别名层表述改为「已清理」状态。

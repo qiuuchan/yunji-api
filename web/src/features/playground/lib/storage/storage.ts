@@ -391,8 +391,56 @@ export function clearPlaygroundData(): void {
     localStorage.removeItem(STORAGE_KEYS.CONFIG)
     localStorage.removeItem(STORAGE_KEYS.PARAMETER_ENABLED)
     localStorage.removeItem(STORAGE_KEYS.MESSAGES)
+    localStorage.removeItem(STORAGE_KEYS.INPUT_DRAFT)
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to clear playground data:', error)
+  }
+}
+
+/**
+ * Load the unsent input draft from localStorage. Returns an empty string
+ * when no draft exists or when reading fails.
+ */
+export function loadInputDraft(): string {
+  try {
+    const saved = readStoredValue(STORAGE_KEYS.INPUT_DRAFT)
+    const value = unwrapStoredValue(saved)
+    if (typeof value === 'string') {
+      return value
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to load input draft:', error)
+  }
+  return ''
+}
+
+/**
+ * Save the unsent input draft to localStorage. Empty drafts are cleared
+ * so a blank input does not leave a stale entry behind.
+ */
+export function saveInputDraft(draft: string): void {
+  try {
+    if (!draft) {
+      localStorage.removeItem(STORAGE_KEYS.INPUT_DRAFT)
+      return
+    }
+    writeStoredValue(STORAGE_KEYS.INPUT_DRAFT, draft)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to save input draft:', error)
+  }
+}
+
+/**
+ * Remove the unsent input draft from localStorage.
+ */
+export function clearInputDraft(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEYS.INPUT_DRAFT)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to clear input draft:', error)
   }
 }

@@ -190,7 +190,7 @@ export function ExtendDeploymentDialog({
         <div className='space-y-4'>
           <div className='text-muted-foreground text-sm'>
             {t('Deployment ID')}:{' '}
-            <span className='font-cyber-mono'>{deploymentId}</span>
+            <span className='font-mono'>{deploymentId}</span>
           </div>
 
           <div className='space-y-2'>

@@ -3073,7 +3073,7 @@ export function ChannelMutateDrawer({
                                             placeholder={t(
                                               'Hidden — verify to reveal'
                                             )}
-                                            className='font-cyber-mono'
+                                            className='font-mono'
                                           />
                                         </div>
                                       )}
@@ -3481,7 +3481,7 @@ export function ChannelMutateDrawer({
                                             <p className='text-xs font-semibold tracking-wide uppercase'>
                                               {t('Request flow')}
                                             </p>
-                                            <div className='font-cyber-mono space-y-1 text-xs'>
+                                            <div className='space-y-1 font-mono text-xs'>
                                               {mappingPreviewPairs.map(
                                                 (pair) => (
                                                   <div
@@ -3537,7 +3537,7 @@ export function ChannelMutateDrawer({
                                         {t(
                                           'Model Mapping must be a JSON object like'
                                         )}{' '}
-                                        <code className='font-cyber-mono'>
+                                        <code className='font-mono'>
                                           {'{"gpt-4":"Azure-GPT4"}'}
                                         </code>
                                         {t(

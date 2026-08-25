@@ -199,7 +199,7 @@ export function PrefillGroupManagementDialog({
                   <StatusBadge variant={meta.badge} size='sm' copyable={false}>
                     {meta.label}
                     <span className='text-muted-foreground/30'>·</span>
-                    <span className='text-muted-foreground font-cyber-mono'>
+                    <span className='text-muted-foreground font-mono'>
                       #{group.id}
                     </span>
                   </StatusBadge>
