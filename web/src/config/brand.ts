@@ -25,7 +25,7 @@ For commercial licensing, please contact support@quantumnous.com
  */
 
 /** 站点品牌名 */
-export const BRAND_NAME = 'Yunji API'
+export const BRAND_NAME = 'YUNJI API'
 
 /** 品牌 slogan 的 i18n 键（与英文原文一致），展示时必须通过 t() 使用 */
 export const BRAND_SLOGAN = 'Every AI Model, One API'
