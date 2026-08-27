@@ -54,6 +54,6 @@
   "Streaming: enable \"stream\": true for chat UIs to improve perceived latency.": "Streaming: enable \"stream\": true for chat UIs to improve perceived latency.",
   "Retries: retry transient 429/5xx errors with exponential backoff. The SDKs can do this for you.": "Retries: retry transient 429/5xx errors with exponential backoff. The SDKs can do this for you.",
   "Create a token from the dashboard \"Tokens\" page; it is shown once on creation.": "Create a token from the dashboard \"Tokens\" page; it is shown once on creation.",
-  "Use your instance base URL with the /v1 path, e.g. https://your-instance.example.com/v1.": "Use your instance base URL with the /v1 path, e.g. https://your-instance.example.com/v1.",
+  "Use your instance base URL with the /v1 path, e.g. https://zhonguoyunji.com/v1.": "Use your instance base URL with the /v1 path, e.g. https://zhonguoyunji.com/v1.",
   "Limits and quotas are per token; exceeding them returns HTTP 429 with a retry-after hint.": "Limits and quotas are per token; exceeding them returns HTTP 429 with a retry-after hint."
 }

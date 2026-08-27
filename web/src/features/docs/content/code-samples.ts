@@ -28,7 +28,7 @@ For commercial licensing, please contact support@quantumnous.com
  *   base path `/v1`, Bearer token auth, standard request/response shapes.
  */
 
-export const QUICK_START_CURL = `curl https://your-instance.example.com/v1/chat/completions \\
+export const QUICK_START_CURL = `curl https://zhonguoyunji.com/v1/chat/completions \\
   -H "Authorization: Bearer $NEWAPI_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -41,7 +41,7 @@ export const QUICK_START_CURL = `curl https://your-instance.example.com/v1/chat/
 export const QUICK_START_PYTHON = `from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://your-instance.example.com/v1",
+    base_url="https://zhonguoyunji.com/v1",
     api_key="sk-your-token",
 )
 
@@ -54,7 +54,7 @@ print(response.choices[0].message.content)`
 export const QUICK_START_NODE = `import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://your-instance.example.com/v1",
+  baseURL: "https://zhonguoyunji.com/v1",
   apiKey: "sk-your-token",
 });
 
@@ -64,12 +64,12 @@ const response = await client.chat.completions.create({
 });
 console.log(response.choices[0].message.content);`
 
-export const AUTH_REQUEST = `curl https://your-instance.example.com/v1/chat/completions \\
+export const AUTH_REQUEST = `curl https://zhonguoyunji.com/v1/chat/completions \\
   -H "Authorization: Bearer sk-your-token" \\
   -H "Content-Type: application/json" \\
   -d '{ "model": "gpt-4o-mini", "messages": [{ "role": "user", "content": "Hi" }] }'`
 
-export const CHAT_COMPLETIONS_REQUEST = `curl https://your-instance.example.com/v1/chat/completions \\
+export const CHAT_COMPLETIONS_REQUEST = `curl https://zhonguoyunji.com/v1/chat/completions \\
   -H "Authorization: Bearer sk-your-token" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -83,7 +83,7 @@ export const CHAT_COMPLETIONS_REQUEST = `curl https://your-instance.example.com/
     "stream": false
   }'`
 
-export const CHAT_COMPLETIONS_STREAM = `curl https://your-instance.example.com/v1/chat/completions \\
+export const CHAT_COMPLETIONS_STREAM = `curl https://zhonguoyunji.com/v1/chat/completions \\
   -H "Authorization: Bearer sk-your-token" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -97,7 +97,7 @@ export const CHAT_COMPLETIONS_STREAM = `curl https://your-instance.example.com/v
 # data: {"choices":[{"delta":{"content":" "}}]}
 # data: [DONE]`
 
-export const MODELS_LIST = `curl https://your-instance.example.com/v1/models \\
+export const MODELS_LIST = `curl https://zhonguoyunji.com/v1/models \\
   -H "Authorization: Bearer sk-your-token"
 
 # Response
@@ -109,7 +109,7 @@ export const MODELS_LIST = `curl https://your-instance.example.com/v1/models \\
 #   ]
 # }`
 
-export const EMBEDDINGS_REQUEST = `curl https://your-instance.example.com/v1/embeddings \\
+export const EMBEDDINGS_REQUEST = `curl https://zhonguoyunji.com/v1/embeddings \\
   -H "Authorization: Bearer sk-your-token" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -136,7 +136,7 @@ export const ERROR_RESPONSE = `{
   }
 }`
 
-export const SDK_CURL = `curl https://your-instance.example.com/v1/chat/completions \\
+export const SDK_CURL = `curl https://zhonguoyunji.com/v1/chat/completions \\
   -H "Authorization: Bearer sk-your-token" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -147,7 +147,7 @@ export const SDK_CURL = `curl https://your-instance.example.com/v1/chat/completi
 export const SDK_PYTHON = `from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://your-instance.example.com/v1",
+    base_url="https://zhonguoyunji.com/v1",
     api_key="sk-your-token",
 )
 
@@ -163,7 +163,7 @@ for chunk in stream:
 export const SDK_NODE = `import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://your-instance.example.com/v1",
+  baseURL: "https://zhonguoyunji.com/v1",
   apiKey: "sk-your-token",
 });
 
@@ -181,7 +181,7 @@ for await (const chunk of stream) {
 export const RETRY_EXAMPLE = `import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://your-instance.example.com/v1",
+  baseURL: "https://zhonguoyunji.com/v1",
   apiKey: "sk-your-token",
   maxRetries: 3,
   timeout: 30_000,

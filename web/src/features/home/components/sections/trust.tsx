@@ -21,47 +21,19 @@ import { useTranslation } from 'react-i18next'
 
 import { AnimateInView } from '@/components/animate-in-view'
 
-// Placeholder partner slots — replaced with real logos when available.
-// Stable keys (not array indices) keep React reconciliation correct.
-const PARTNER_SLOTS = [
-  'slot-1',
-  'slot-2',
-  'slot-3',
-  'slot-4',
-  'slot-5',
-  'slot-6',
-]
-
 export function Trust() {
   const { t } = useTranslation()
 
   return (
-    <section className='relative z-10 px-6 py-20 md:py-24'>
-      <div className='mx-auto max-w-6xl'>
-        <AnimateInView className='mb-10 text-center'>
+    <section className='relative z-10 px-6 py-16 md:py-20'>
+      <div className='mx-auto flex max-w-3xl flex-col items-center gap-3 text-center'>
+        <AnimateInView>
           <p className='text-muted-foreground/60 text-xs font-medium tracking-widest uppercase'>
             {t('Trusted by teams building with AI')}
           </p>
         </AnimateInView>
 
-        <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6'>
-          {PARTNER_SLOTS.map((slot) => (
-            <div
-              key={slot}
-              className='border-border/40 bg-muted/15 flex h-16 items-center justify-center rounded-xl border'
-              aria-hidden
-            >
-              <span className='text-muted-foreground/30 text-xs font-medium tracking-wide'>
-                {t('Partner')}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <AnimateInView
-          animation='fade-up'
-          className='mt-12 flex flex-col items-center justify-center gap-2 text-center'
-        >
+        <AnimateInView animation='fade-up'>
           <div className='flex items-center gap-2 text-sm font-medium text-[#9d8cff]'>
             <ShieldCheck className='size-4' />
             {t('SOC 2 ready · HTTPS everywhere · we never store your prompts')}

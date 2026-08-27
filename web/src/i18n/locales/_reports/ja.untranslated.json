@@ -116,7 +116,7 @@
   "Where do I get an API token?": "Where do I get an API token?",
   "Create a token from the dashboard \"Tokens\" page; it is shown once on creation.": "Create a token from the dashboard \"Tokens\" page; it is shown once on creation.",
   "Which base URL should I use?": "Which base URL should I use?",
-  "Use your instance base URL with the /v1 path, e.g. https://your-instance.example.com/v1.": "Use your instance base URL with the /v1 path, e.g. https://your-instance.example.com/v1.",
+  "Use your instance base URL with the /v1 path, e.g. https://zhonguoyunji.com/v1.": "Use your instance base URL with the /v1 path, e.g. https://zhonguoyunji.com/v1.",
   "Do you support streaming?": "Do you support streaming?",
   "Yes. Set \"stream\": true on chat completions; chunks arrive as Server-Sent Events.": "Yes. Set \"stream\": true on chat completions; chunks arrive as Server-Sent Events.",
   "How are rate limits enforced?": "How are rate limits enforced?",

@@ -72,7 +72,7 @@ const FAQ_ITEMS: { qKey: string; aKey: string }[] = [
   },
   {
     qKey: 'Which base URL should I use?',
-    aKey: 'Use your instance base URL with the /v1 path, e.g. https://your-instance.example.com/v1.',
+    aKey: 'Use your instance base URL with the /v1 path, e.g. https://zhonguoyunji.com/v1.',
   },
   {
     qKey: 'Do you support streaming?',
