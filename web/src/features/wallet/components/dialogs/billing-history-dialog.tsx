@@ -16,7 +16,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { Search, Copy, Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  Search,
+  Copy,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  ReceiptText,
+} from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -49,15 +57,91 @@ import { formatCurrencyFromUSD } from '@/lib/currency'
 import { formatNumber } from '@/lib/format'
 
 import { useBillingHistory } from '../../hooks/use-billing-history'
+import { useInvoices } from '../../hooks/use-invoices'
 import {
   getStatusConfig,
   getPaymentMethodName,
+  getInvoiceStatusConfig,
+  getInvoiceAction,
   formatTimestamp,
 } from '../../lib/billing'
+import type { InvoiceFormValues } from '../../lib/invoice-schema'
+import type { InvoiceRecord, TopupRecord } from '../../types'
+import { InvoiceDialog } from './invoice-dialog'
 
 interface BillingHistoryDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+}
+
+interface InvoiceActionsProps {
+  record: TopupRecord
+  invoice: InvoiceRecord | undefined
+  onApply: () => void
+}
+
+/**
+ * Per-record invoice affordance: an apply/resubmit button, or a status badge
+ * with an optional link to the issued invoice.
+ */
+function InvoiceActions(props: InvoiceActionsProps) {
+  const { t } = useTranslation()
+
+  const action = getInvoiceAction({
+    isAdminView: false,
+    topupStatus: props.record.status,
+    invoice: props.invoice,
+  })
+
+  if (action === 'apply') {
+    return (
+      <Button size='sm' variant='outline' onClick={props.onApply}>
+        <ReceiptText className='mr-1 h-3.5 w-3.5' />
+        {t('Apply for Invoice')}
+      </Button>
+    )
+  }
+
+  if (action === 'resubmit') {
+    return (
+      <div className='flex flex-wrap items-center justify-end gap-2'>
+        {props.invoice?.admin_remark && (
+          <span className='text-muted-foreground text-xs'>
+            {t('Rejection reason:')} {props.invoice.admin_remark}
+          </span>
+        )}
+        <Button size='sm' variant='outline' onClick={props.onApply}>
+          <ReceiptText className='mr-1 h-3.5 w-3.5' />
+          {t('Resubmit')}
+        </Button>
+      </div>
+    )
+  }
+
+  if (!props.invoice) return null
+
+  const config = getInvoiceStatusConfig(props.invoice.status)
+  return (
+    <div className='flex flex-wrap items-center justify-end gap-2'>
+      <StatusBadge
+        label={t(config.labelKey)}
+        variant={config.variant}
+        showDot
+        copyable={false}
+      />
+      {props.invoice.status === 'issued' && props.invoice.invoice_url && (
+        <a
+          href={props.invoice.invoice_url}
+          target='_blank'
+          rel='noopener noreferrer'
+          className='text-primary inline-flex items-center gap-1 text-xs hover:underline'
+        >
+          {t('View Invoice')}
+          <ExternalLink className='h-3.5 w-3.5' aria-hidden='true' />
+        </a>
+      )}
+    </div>
+  )
 }
 
 export function BillingHistoryDialog({
@@ -80,7 +164,11 @@ export function BillingHistoryDialog({
     handleCompleteOrder,
   } = useBillingHistory()
 
+  const { invoiceByTopupId, invoices, isSubmitting, submitInvoice } =
+    useInvoices(open && !isAdmin)
+
   const [confirmTradeNo, setConfirmTradeNo] = useState<string | null>(null)
+  const [invoiceRecord, setInvoiceRecord] = useState<TopupRecord | null>(null)
   const { copyToClipboard, copiedText } = useCopyToClipboard({ notify: false })
 
   const totalPages = Math.ceil(total / pageSize)
@@ -91,6 +179,24 @@ export function BillingHistoryDialog({
       if (success) {
         setConfirmTradeNo(null)
       }
+    }
+  }
+
+  const handleSubmitInvoice = async (
+    values: InvoiceFormValues,
+    topupId: number
+  ) => {
+    try {
+      await submitInvoice({
+        topup_id: topupId,
+        title_type: values.title_type,
+        title: values.title.trim(),
+        tax_id: values.tax_id.trim(),
+        email: values.email.trim(),
+      })
+      return true
+    } catch {
+      return false
     }
   }
 
@@ -258,19 +364,32 @@ export function BillingHistoryDialog({
                         </div>
                       </div>
 
-                      {/* Admin Actions */}
-                      {isAdmin && record.status === 'pending' && (
-                        <div className='mt-4 flex justify-end'>
-                          <Button
-                            size='sm'
-                            variant='outline'
-                            onClick={() => setConfirmTradeNo(record.trade_no)}
-                            disabled={completing}
-                          >
-                            {t('Complete Order')}
-                          </Button>
+                      {/* Actions */}
+                      {(isAdmin && record.status === 'pending') ||
+                      getInvoiceAction({
+                        isAdminView: isAdmin,
+                        topupStatus: record.status,
+                        invoice: invoiceByTopupId.get(record.id),
+                      }) !== 'none' ||
+                      invoiceByTopupId.get(record.id) ? (
+                        <div className='mt-4 flex flex-wrap items-center justify-end gap-2'>
+                          <InvoiceActions
+                            record={record}
+                            invoice={invoiceByTopupId.get(record.id)}
+                            onApply={() => setInvoiceRecord(record)}
+                          />
+                          {isAdmin && record.status === 'pending' && (
+                            <Button
+                              size='sm'
+                              variant='outline'
+                              onClick={() => setConfirmTradeNo(record.trade_no)}
+                              disabled={completing}
+                            >
+                              {t('Complete Order')}
+                            </Button>
+                          )}
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   )
                 })}
@@ -342,6 +461,19 @@ export function BillingHistoryDialog({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Invoice Application Dialog */}
+      <InvoiceDialog
+        open={!!invoiceRecord}
+        onOpenChange={(isOpen) => !isOpen && setInvoiceRecord(null)}
+        record={invoiceRecord}
+        existingInvoice={
+          invoiceRecord ? invoiceByTopupId.get(invoiceRecord.id) : undefined
+        }
+        lastInvoice={invoices[0]}
+        submitting={isSubmitting}
+        onSubmit={handleSubmitInvoice}
+      />
     </>
   )
 }

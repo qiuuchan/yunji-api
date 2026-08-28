@@ -336,3 +336,23 @@ const (
 	MsgCustomOAuthBindingNotFound   = "custom_oauth.binding_not_found"
 	MsgCustomOAuthProviderIdInvalid = "custom_oauth.provider_id_field_invalid"
 )
+
+// Invoice related messages
+const (
+	MsgInvoiceInvalidParams       = "invoice.invalid_params"
+	MsgInvoiceInvalidTitleType    = "invoice.invalid_title_type"
+	MsgInvoiceTitleRequired       = "invoice.title_required"
+	MsgInvoiceTaxIdRequired       = "invoice.tax_id_required"
+	MsgInvoiceEmailRequired       = "invoice.email_required"
+	MsgInvoiceEmailInvalid        = "invoice.email_invalid"
+	MsgInvoiceTopUpNotFound       = "invoice.topup_not_found"
+	MsgInvoiceTopUpNotSuccess     = "invoice.topup_not_success"
+	MsgInvoiceAlreadyApplied      = "invoice.already_applied"
+	MsgInvoiceNotFound            = "invoice.not_found"
+	MsgInvoiceStatusInvalid       = "invoice.status_invalid"
+	MsgInvoiceRemarkRequired      = "invoice.remark_required"
+	MsgInvoiceInvalidAction       = "invoice.invalid_action"
+	MsgInvoiceSubmitSuccess       = "invoice.submit_success"
+	MsgInvoiceReviewSuccess       = "invoice.review_success"
+	MsgInvoiceInvalidStatusFilter = "invoice.invalid_status_filter"
+)

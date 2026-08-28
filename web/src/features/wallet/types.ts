@@ -287,3 +287,66 @@ export interface BillingHistoryResponse {
 export interface CompleteOrderRequest {
   trade_no: string
 }
+
+/**
+ * Invoice application status
+ */
+export type InvoiceStatus = 'pending' | 'issued' | 'rejected'
+
+/**
+ * Invoice title type
+ */
+export type InvoiceTitleType = 'personal' | 'company'
+
+/**
+ * Invoice application record
+ */
+export interface InvoiceRecord {
+  /** Record ID */
+  id: number
+  /** User ID */
+  user_id: number
+  /** Related topup record ID */
+  topup_id: number
+  /** Order number snapshot */
+  trade_no: string
+  /** Invoiced amount snapshot (actual money paid) */
+  amount: number
+  /** Invoice title type */
+  title_type: InvoiceTitleType
+  /** Invoice title */
+  title: string
+  /** Tax ID, required for company titles */
+  tax_id: string
+  /** Email receiving the invoice */
+  email: string
+  /** Application status */
+  status: InvoiceStatus
+  /** Rejection reason or admin remark */
+  admin_remark: string
+  /** Issued invoice file link */
+  invoice_url: string
+  /** Creation timestamp */
+  create_time: number
+  /** Last update timestamp */
+  update_time: number
+}
+
+/**
+ * Invoice application request
+ */
+export interface SubmitInvoiceRequest {
+  topup_id: number
+  title_type: InvoiceTitleType
+  title: string
+  tax_id: string
+  email: string
+}
+
+/**
+ * Invoice list response payload
+ */
+export interface InvoiceListResponse {
+  items: InvoiceRecord[]
+  total: number
+}

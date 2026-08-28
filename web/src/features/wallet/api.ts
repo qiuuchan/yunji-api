@@ -33,6 +33,8 @@ import type {
   AffiliateTransferResponse,
   BillingHistoryResponse,
   CompleteOrderRequest,
+  InvoiceListResponse,
+  SubmitInvoiceRequest,
   CreemPaymentRequest,
   CreemPaymentResponse,
   WaffoPaymentRequest,
@@ -244,5 +246,30 @@ export async function completeOrder(
   request: CompleteOrderRequest
 ): Promise<ApiResponse> {
   const res = await api.post('/api/user/topup/complete', request)
+  return res.data
+}
+
+/**
+ * Submit an invoice application for a successful topup record
+ */
+export async function submitInvoiceApplication(
+  request: SubmitInvoiceRequest
+): Promise<ApiResponse> {
+  const res = await api.post('/api/user/invoice', request)
+  return res.data
+}
+
+/**
+ * Get invoice applications of the current user
+ */
+export async function getUserInvoices(
+  page: number,
+  pageSize: number
+): Promise<ApiResponse<InvoiceListResponse>> {
+  const params = new URLSearchParams({
+    p: page.toString(),
+    page_size: pageSize.toString(),
+  })
+  const res = await api.get(`/api/user/invoice/self?${params.toString()}`)
   return res.data
 }
