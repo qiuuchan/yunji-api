@@ -20,7 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import axios from 'axios'
 import { Loader2, LogIn, KeyRound } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -41,8 +41,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { login, wechatLoginByCode } from '@/features/auth/api'
-import { LegalConsent } from '@/features/auth/components/legal-consent'
 import { OAuthProviders } from '@/features/auth/components/oauth-providers'
+import { UsageStatementDialog } from '@/features/auth/components/usage-statement-dialog'
 import { loginFormSchema } from '@/features/auth/constants'
 import { useAuthRedirect } from '@/features/auth/hooks/use-auth-redirect'
 import { useTurnstile } from '@/features/auth/hooks/use-turnstile'
@@ -67,13 +67,13 @@ export function UserAuthForm({
   const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const [wechatCode, setWeChatCode] = useState('')
-  const [agreedToLegal, setAgreedToLegal] = useState(false)
+  const [isUsageStatementOpen, setIsUsageStatementOpen] = useState(false)
   const [passkeySupported, setPasskeySupported] = useState(false)
   const [isPasskeyLoading, setIsPasskeyLoading] = useState(false)
   const [isWeChatDialogOpen, setIsWeChatDialogOpen] = useState(false)
   const [isWeChatSubmitting, setIsWeChatSubmitting] = useState(false)
   const [turnstileWidgetKey, setTurnstileWidgetKey] = useState(0)
-  const legalConsentErrorMessage = t('Please agree to the legal terms first')
+  const pendingLoginActionRef = useRef<(() => void) | null>(null)
   const loginFailedMessage = t('Login failed')
 
   const { status } = useStatus()
@@ -96,13 +96,6 @@ export function UserAuthForm({
     (state) => state.auth.setPending2FAFlowToken
   )
 
-  const hasUserAgreement = Boolean(status?.user_agreement_enabled)
-  const hasPrivacyPolicy = Boolean(status?.privacy_policy_enabled)
-  const requiresLegalConsent = hasUserAgreement || hasPrivacyPolicy
-  const passkeyButtonDisabled =
-    isPasskeyLoading ||
-    !passkeySupported ||
-    (requiresLegalConsent && !agreedToLegal)
   const hasWeChatLogin = Boolean(status?.wechat_login)
   const hasOAuthLogin = Boolean(
     status?.github_oauth ||
@@ -115,13 +108,26 @@ export function UserAuthForm({
   const hasAlternativeLogin =
     passkeyLoginEnabled || hasWeChatLogin || hasOAuthLogin
 
-  useEffect(() => {
-    if (requiresLegalConsent) {
-      setAgreedToLegal(false)
-    } else {
-      setAgreedToLegal(true)
+  // Every sign-in attempt must be confirmed against the usage statement
+  // before any login request (password, Passkey, WeChat, or OAuth) runs.
+  const requestLoginConsent = (performLogin: () => void) => {
+    pendingLoginActionRef.current = performLogin
+    setIsUsageStatementOpen(true)
+  }
+
+  const handleUsageStatementAgree = () => {
+    const performLogin = pendingLoginActionRef.current
+    pendingLoginActionRef.current = null
+    setIsUsageStatementOpen(false)
+    performLogin?.()
+  }
+
+  const handleUsageStatementOpenChange = (open: boolean) => {
+    setIsUsageStatementOpen(open)
+    if (!open) {
+      pendingLoginActionRef.current = null
     }
-  }, [requiresLegalConsent])
+  }
 
   useEffect(() => {
     detectPasskeySupport()
@@ -137,6 +143,8 @@ export function UserAuthForm({
     },
   })
 
+  const passkeyButtonDisabled = isPasskeyLoading || !passkeySupported
+
   const wechatQrCodeUrl = useMemo(() => {
     return (
       status?.wechat_qrcode ||
@@ -151,12 +159,7 @@ export function UserAuthForm({
     )
   }, [status])
 
-  async function onSubmit(data: z.infer<typeof loginFormSchema>) {
-    if (requiresLegalConsent && !agreedToLegal) {
-      toast.error(legalConsentErrorMessage)
-      return
-    }
-
+  async function performPasswordLogin(data: z.infer<typeof loginFormSchema>) {
     if (!validateTurnstile()) return
 
     const submittedTurnstileToken = turnstileToken
@@ -198,11 +201,6 @@ export function UserAuthForm({
   }
 
   const handleOpenWeChatDialog = () => {
-    if (requiresLegalConsent && !agreedToLegal) {
-      toast.error(legalConsentErrorMessage)
-      return
-    }
-
     setIsWeChatDialogOpen(true)
   }
 
@@ -240,11 +238,6 @@ export function UserAuthForm({
   }
 
   async function handlePasskeyLogin() {
-    if (requiresLegalConsent && !agreedToLegal) {
-      toast.error(legalConsentErrorMessage)
-      return
-    }
-
     if (!passkeySupported) {
       toast.error(t('Passkey is not supported on this device'))
       return
@@ -341,7 +334,8 @@ export function UserAuthForm({
       <OAuthProviders
         status={status}
         redirectTo={redirectTo}
-        disabled={isLoading || (requiresLegalConsent && !agreedToLegal)}
+        disabled={isLoading}
+        onLoginAttempt={requestLoginConsent}
         onWeChatLogin={hasWeChatLogin ? handleOpenWeChatDialog : undefined}
         isWeChatLoading={isWeChatSubmitting}
       />
@@ -351,7 +345,11 @@ export function UserAuthForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((data) =>
+          requestLoginConsent(() => {
+            void performPasswordLogin(data)
+          })
+        )}
         className={cn('grid gap-4', className)}
         {...props}
       >
@@ -405,7 +403,7 @@ export function UserAuthForm({
             <Button
               type='submit'
               className='brand-glow-text mt-2 w-full animate-[brand-pulse-glow_2.4s_ease-in-out_infinite] justify-center gap-2'
-              disabled={isLoading || (requiresLegalConsent && !agreedToLegal)}
+              disabled={isLoading}
             >
               {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
               {t('Sign in')}
@@ -425,15 +423,14 @@ export function UserAuthForm({
           </>
         )}
 
-        <LegalConsent
-          status={status}
-          checked={agreedToLegal}
-          onCheckedChange={setAgreedToLegal}
-          className='mt-1'
-        />
-
         {!hasAlternativeLogin && alternativeLoginMethods}
       </form>
+
+      <UsageStatementDialog
+        open={isUsageStatementOpen}
+        onOpenChange={handleUsageStatementOpenChange}
+        onAgree={handleUsageStatementAgree}
+      />
 
       {hasWeChatLogin && (
         <Dialog
@@ -460,11 +457,7 @@ export function UserAuthForm({
               <Button
                 type='button'
                 onClick={handleWeChatLogin}
-                disabled={
-                  isWeChatSubmitting ||
-                  !wechatCode.trim() ||
-                  (requiresLegalConsent && !agreedToLegal)
-                }
+                disabled={isWeChatSubmitting || !wechatCode.trim()}
                 className='gap-2'
               >
                 {isWeChatSubmitting ? (
