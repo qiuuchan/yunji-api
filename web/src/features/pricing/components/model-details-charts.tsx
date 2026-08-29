@@ -42,7 +42,7 @@ export type UptimeDayPoint = {
 }
 
 /** Brand chart palette (cyan, purple, pink, green, amber). */
-const BRAND_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
+const BRAND_PALETTE = ['#f0e9dc', '#e8a33d', '#c97b4a', '#7fb069', '#8f8678']
 
 function formatHourLabel(iso: string): string {
   const date = new Date(iso)
@@ -240,7 +240,7 @@ export function UptimeTrendChart(props: {
       yField: 'uptime',
       smooth: true,
       line: {
-        style: { stroke: '#34d399', lineWidth: 2 },
+        style: { stroke: '#7fb069', lineWidth: 2 },
       },
       point: {
         visible: true,
@@ -360,7 +360,7 @@ export function ThroughputBarChart(props: {
       yField: 'group',
       bar: {
         style: {
-          fill: '#38bdf8',
+          fill: '#d4a05a',
           ...(barRadius == null ? {} : { cornerRadius: barRadius }),
         },
       },

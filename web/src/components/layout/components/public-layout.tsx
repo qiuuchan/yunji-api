@@ -34,8 +34,6 @@ type PublicLayoutProps = {
 export function PublicLayout(props: PublicLayoutProps) {
   return (
     <div className='bg-background text-foreground relative min-h-svh overflow-x-clip'>
-      {/* 顶部微弱蓝紫径向辉光 */}
-      <div className='pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(110,91,255,0.10),transparent_70%)]' />
       <PublicHeader
         navContent={props.navContent}
         navLinks={props.navLinks}

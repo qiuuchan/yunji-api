@@ -65,7 +65,7 @@ function DataTableRowInner<TData>({
     <TableRow
       data-state={isSelected ? 'selected' : undefined}
       className={cn(
-        'hover:bg-[rgba(110,91,255,0.05)] hover:shadow-[inset_2px_0_0_var(--primary)] data-[state=selected]:bg-primary/10',
+        'hover:bg-[rgba(232,163,61,0.05)] hover:shadow-[inset_2px_0_0_var(--primary)] data-[state=selected]:bg-primary/10',
         className
       )}
       {...rowProps}

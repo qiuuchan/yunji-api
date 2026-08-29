@@ -57,7 +57,7 @@ const VENDOR_COLOURS: Record<string, string> = {
   Others: '#94a3b8',
 }
 
-const FALLBACK_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
+const FALLBACK_PALETTE = ['#f0e9dc', '#e8a33d', '#c97b4a', '#7fb069', '#8f8678']
 
 function buildVendorColourMap(names: string[]): Record<string, string> {
   const result: Record<string, string> = {}

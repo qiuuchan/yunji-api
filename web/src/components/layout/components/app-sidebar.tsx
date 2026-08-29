@@ -52,7 +52,7 @@ export function AppSidebar() {
     <Sidebar
       collapsible={collapsible}
       variant={variant}
-      className='border-r border-[rgba(110,91,255,0.14)] bg-[rgba(5,6,11,0.55)] backdrop-blur-xl'
+      className='border-r border-[rgba(232,163,61,0.14)] bg-[rgba(5,6,11,0.55)] backdrop-blur-xl'
     >
       {view && <SidebarViewHeader view={view} />}
 
@@ -75,7 +75,7 @@ export function AppSidebar() {
         </AnimatePresence>
       </SidebarContent>
 
-      <SidebarRail className='border-t border-[rgba(110,91,255,0.14)]' />
+      <SidebarRail className='border-t border-[rgba(232,163,61,0.14)]' />
     </Sidebar>
   )
 }

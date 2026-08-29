@@ -28,25 +28,28 @@ import { EnterpriseSections } from './components/enterprise-sections'
 function EnterpriseHero() {
   const { t } = useTranslation()
   return (
-    <section className='mx-auto max-w-4xl pt-10 text-center md:pt-16'>
-      <span className='brand-gradient-bg inline-flex rounded-full px-3 py-1 text-xs font-medium'>
-        {t('For organizations')}
-      </span>
-      <h1 className='brand-gradient-text mt-5 text-3xl font-bold tracking-tight md:text-5xl'>
-        {t('Enterprise-grade AI infrastructure for your organization')}
-      </h1>
-      <p className='text-muted-foreground mx-auto mt-4 max-w-2xl text-sm leading-relaxed md:text-base'>
-        {t(
-          'Reliable, secure, and scalable access to leading models through a single OpenAI-compatible API.'
-        )}
-      </p>
-      <div className='mt-7 flex items-center justify-center gap-3'>
-        <Button render={<Link to='/docs' />} size='lg'>
-          {t('View documentation')}
-        </Button>
-        <Button render={<Link to='/pricing' />} size='lg' variant='outline'>
-          {t('Compare plans')}
-        </Button>
+    <section className='mx-auto w-full max-w-[1260px] pt-14 md:pt-20'>
+      <div className='max-w-2xl'>
+        <h1 className='text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.15] font-medium'>
+          {t('Enterprise-grade AI infrastructure for your organization')}
+        </h1>
+        <p className='text-muted-foreground mt-5 text-[15px] leading-relaxed md:text-base'>
+          {t(
+            'Reliable, secure, and scalable access to leading models through a single OpenAI-compatible API.'
+          )}
+        </p>
+        <div className='mt-8 flex flex-wrap items-center gap-3'>
+          <Button render={<Link to='/docs' />} className='h-10 rounded-md px-5'>
+            {t('View documentation')}
+          </Button>
+          <Button
+            render={<Link to='/pricing' />}
+            variant='outline'
+            className='h-10 rounded-md px-5'
+          >
+            {t('View pricing')}
+          </Button>
+        </div>
       </div>
     </section>
   )

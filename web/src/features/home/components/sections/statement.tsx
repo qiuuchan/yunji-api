@@ -16,38 +16,30 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { Link } from '@tanstack/react-router'
-import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/ui/button'
-
-interface HeroButtonsProps {
-  isAuthenticated: boolean
-}
+import { AnimateInView } from '@/components/animate-in-view'
+import { BRAND_NAME } from '@/config/brand'
 
 /**
- * Hero section action buttons
+ * Quiet closing statement on the warm section panel: plain, verifiable
+ * facts only (no SOC 2 claims, no performative trust copy).
  */
-export function HeroButtons({ isAuthenticated }: HeroButtonsProps) {
+export function Statement() {
   const { t } = useTranslation()
-  if (isAuthenticated) {
-    return (
-      <Button size='lg' render={<Link to='/dashboard' />}>
-        {t('Go to Dashboard')} <ArrowRight className='ml-2 h-5 w-5' />
-      </Button>
-    )
-  }
 
   return (
-    <>
-      <Button size='lg' render={<Link to='/sign-up' />}>
-        {t('Get Started')}
-        <ArrowRight className='ml-2 h-5 w-5' />
-      </Button>
-      <Button size='lg' variant='outline' render={<Link to='/sign-in' />}>
-        {t('Sign In')}
-      </Button>
-    </>
+    <section className='bg-section relative z-10 px-6 py-24 md:py-28'>
+      <div className='mx-auto max-w-3xl'>
+        <AnimateInView>
+          <p className='text-lg leading-relaxed md:text-2xl md:leading-[1.5]'>
+            <span className='text-foreground'>{BRAND_NAME}</span>{' '}
+            {t(
+              'runs on open-source software; traffic is encrypted in transit, usage is logged per request for your account to inspect, and billing follows the published per-token rates.'
+            )}
+          </p>
+        </AnimateInView>
+      </div>
+    </section>
   )
 }

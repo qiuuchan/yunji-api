@@ -16,7 +16,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import type { PricingModel, TokenUnit } from '../types'
+import { DEFAULT_TOKEN_UNIT } from '../constants'
+import type { PricingModel } from '../types'
 import {
   getDynamicPricingSummary,
   isDynamicPricingModel,
@@ -50,7 +51,9 @@ export type CostBreakdown = {
 }
 
 function safeNumber(value: number | undefined): number {
-  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? value
+    : 0
 }
 
 function applyRechargeRate(
@@ -111,7 +114,7 @@ export function computeEstimate(params: CalculatorParams): CostBreakdown {
 
   if (isDynamicPricingModel(model)) {
     const summary = getDynamicPricingSummary(model, {
-      tokenUnit: 'M' as TokenUnit,
+      tokenUnit: DEFAULT_TOKEN_UNIT,
       showRechargePrice,
       priceRate,
       usdExchangeRate,

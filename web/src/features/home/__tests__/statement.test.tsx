@@ -19,7 +19,7 @@ For commercial licensing, please contact support@quantumnous.com
 import { render, screen } from '@testing-library/react'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { Trust } from '../components/sections/trust'
+import { Statement } from '../components/sections/statement'
 
 beforeAll(() => {
   // jsdom has no IntersectionObserver; stub this browser boundary so
@@ -36,23 +36,24 @@ beforeAll(() => {
   })
 })
 
-describe('home trust section', () => {
-  test('renders the section eyebrow and the compliance assurance line', () => {
-    render(<Trust />)
+describe('home statement section', () => {
+  test('renders the brand name and the plain-facts statement paragraph', () => {
+    render(<Statement />)
 
-    expect(
-      screen.getByText('Trusted by teams building with AI')
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText(
-        'SOC 2 ready · HTTPS everywhere · we never store your prompts'
-      )
-    ).toBeInTheDocument()
+    expect(screen.getByText('YUNJI API')).toBeInTheDocument()
+    const paragraph = screen.getByText('YUNJI API').closest('p')
+    expect(paragraph).toHaveTextContent('runs on open-source software')
+    expect(paragraph).toHaveTextContent('encrypted in transit')
+    expect(paragraph).toHaveTextContent('published per-token rates')
   })
 
-  test('does not render placeholder partner cards', () => {
-    render(<Trust />)
+  test('does not render the removed performative trust copy', () => {
+    render(<Statement />)
 
-    expect(screen.queryByText('Partner')).not.toBeInTheDocument()
+    expect(screen.queryByText(/SOC 2/)).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('Trusted by teams building with AI')
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText(/Partner/)).not.toBeInTheDocument()
   })
 })

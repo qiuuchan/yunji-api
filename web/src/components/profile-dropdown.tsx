@@ -62,7 +62,7 @@ export function ProfileDropdown() {
           render={
             <Button
               variant='ghost'
-              className='hover:text-primary relative size-6 rounded-full p-0 transition-colors hover:border-[rgba(110,91,255,0.35)] hover:bg-[rgba(110,91,255,0.07)] hover:shadow-[0_0_12px_rgba(110,91,255,0.3)]'
+              className='hover:text-primary relative size-6 rounded-full p-0 transition-colors hover:border-[rgba(232,163,61,0.35)] hover:bg-[rgba(232,163,61,0.07)]'
             />
           }
         >

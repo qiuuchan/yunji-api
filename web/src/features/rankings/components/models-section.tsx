@@ -81,6 +81,13 @@ export function ModelsSection(props: ModelsSectionProps) {
     if (orderedPoints.length === 0) return null
     return {
       type: 'bar' as const,
+      // 暖色系列（与 theme.css --chart-1..5 同族），循环覆盖任意系列数。
+      color: props.history.models.map(
+        (_, i) =>
+          ['#f0e9dc', '#e8a33d', '#c97b4a', '#7fb069', '#8f8678'][
+            i % 5
+          ] as string
+      ),
       data: [{ id: 'models-history', values: orderedPoints }],
       xField: 'label',
       yField: 'tokens',
@@ -161,7 +168,7 @@ export function ModelsSection(props: ModelsSectionProps) {
       },
       animationAppear: { duration: 500 },
     }
-  }, [chartGridColor, chartTextColor, orderedPoints, t])
+  }, [chartGridColor, chartTextColor, orderedPoints, props.history.models, t])
 
   return (
     <section className='bg-card overflow-hidden rounded-lg border'>

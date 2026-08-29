@@ -16,10 +16,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
+export { Capabilities } from './sections/capabilities'
 export { CTA } from './sections/cta'
 export { FAQ } from './sections/faq'
-export { Features } from './sections/features'
+export { FactStrip } from './sections/fact-strip'
 export { Hero } from './sections/hero'
-export { HowItWorks } from './sections/how-it-works'
-export { Stats } from './sections/stats'
-export { Trust } from './sections/trust'
+export { QuickStart } from './sections/quick-start'
+export { Statement } from './sections/statement'

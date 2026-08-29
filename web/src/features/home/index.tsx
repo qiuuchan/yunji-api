@@ -27,13 +27,13 @@ import { isLikelyHtml } from '@/lib/content-format'
 import { useAuthStore } from '@/stores/auth-store'
 
 import {
+  Capabilities,
   CTA,
   FAQ,
-  Features,
+  FactStrip,
   Hero,
-  HowItWorks,
-  Stats,
-  Trust,
+  QuickStart,
+  Statement,
 } from './components'
 import { useHomePageContent } from './hooks'
 
@@ -131,11 +131,11 @@ export function Home() {
   return (
     <PublicLayout showMainContainer={false}>
       <Hero isAuthenticated={isAuthenticated} />
-      <Stats />
-      <Features />
-      <HowItWorks />
+      <FactStrip />
+      <Capabilities />
+      <QuickStart />
       <FAQ />
-      <Trust />
+      <Statement />
       <CTA isAuthenticated={isAuthenticated} />
       <Footer />
     </PublicLayout>

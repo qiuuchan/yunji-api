@@ -18,6 +18,8 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { useTranslation } from 'react-i18next'
 
+import { cn } from '@/lib/utils'
+
 import {
   type EnterpriseFeature,
   CUSTOMER_SCENARIOS,
@@ -32,16 +34,35 @@ type EnterpriseSectionProps = {
   items: EnterpriseFeature[]
 }
 
+/* 发丝线矩阵（gap-px over border token），与首页 Capabilities 同构；
+ * 不用卡片盒。badge 为等宽小字类别标签（非 eyebrow 大写）。
+ * 末行不满列时让最后一个条目跨列补满整行（与首页宽主项同一手法），
+ * 避免出现空的发丝线格子。 */
 function FeatureGrid({ items }: { items: EnterpriseFeature[] }) {
   const { t } = useTranslation()
+  const lastIdx = items.length - 1
+  // 末行不满列时让最后一个条目跨列补满：sm(2 列) 与 lg(3 列) 分别判断；
+  // lg 无需跨列时显式回退 col-span-1，避免 sm 的跨列在 lg 带来空洞。
+  const lastSpans: string[] = []
+  if (items.length % 2 !== 0) {
+    lastSpans.push('sm:col-span-2')
+  }
+  if (items.length % 3 !== 0) {
+    lastSpans.push('lg:col-span-2')
+  } else if (items.length % 2 !== 0) {
+    lastSpans.push('lg:col-span-1')
+  }
   return (
-    <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-      {items.map((item) => (
-        <article key={item.titleKey} className='brand-card p-5'>
-          <span className='brand-gradient-text text-xs font-semibold tracking-wide uppercase'>
+    <div className='border-border bg-border grid gap-px overflow-hidden rounded-lg border sm:grid-cols-2 lg:grid-cols-3'>
+      {items.map((item, i) => (
+        <article
+          key={item.titleKey}
+          className={cn('bg-background p-6', i === lastIdx && lastSpans)}
+        >
+          <span className='text-muted-foreground font-mono text-xs'>
             {t(item.badgeKey)}
           </span>
-          <h3 className='mt-2 text-base font-semibold'>{t(item.titleKey)}</h3>
+          <h3 className='mt-3 text-base font-medium'>{t(item.titleKey)}</h3>
           <p className='text-muted-foreground mt-2 text-sm leading-relaxed'>
             {t(item.descriptionKey)}
           </p>
@@ -58,12 +79,12 @@ function EnterpriseSection({
 }: EnterpriseSectionProps) {
   const { t } = useTranslation()
   return (
-    <section className='mx-auto mt-14 max-w-5xl'>
-      <div className='mb-6 text-center'>
-        <h2 className='text-xl font-bold tracking-tight md:text-2xl'>
+    <section className='mx-auto mt-16 w-full max-w-[1260px] md:mt-20'>
+      <div className='mb-8 max-w-2xl'>
+        <h2 className='text-2xl leading-[1.2] font-medium md:text-3xl'>
           {t(headingKey)}
         </h2>
-        <p className='text-muted-foreground mx-auto mt-2 max-w-2xl text-sm'>
+        <p className='text-muted-foreground mt-3 text-[15px]'>
           {t(descriptionKey)}
         </p>
       </div>
@@ -82,7 +103,7 @@ export function EnterpriseSections() {
       />
       <EnterpriseSection
         headingKey='Deployment options'
-        descriptionKey='Run the way your organization needs — managed or self-hosted.'
+        descriptionKey='Managed cloud or self-hosted deployment, whichever fits your organization.'
         items={DEPLOYMENT_OPTIONS}
       />
       <EnterpriseSection

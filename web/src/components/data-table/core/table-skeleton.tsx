@@ -58,7 +58,7 @@ export function TableSkeleton<TData>({
       {Array.from({ length: finalRowCount }, (_, rowIndex) => (
         <TableRow
           key={`${keyPrefix}-${rowIndex}`}
-          className={cn(rowHeight, 'border-b border-[rgba(110,91,255,0.08)]')}
+          className={cn(rowHeight, 'border-b border-[rgba(232,163,61,0.08)]')}
         >
           {visibleColumns.map((column, colIndex) => {
             const isSelectColumn = column.id === 'select'

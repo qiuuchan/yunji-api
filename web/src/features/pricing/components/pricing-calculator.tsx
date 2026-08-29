@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 
 import { formatBillingCurrencyFromUSD } from '@/lib/currency'
 
-import { EXCLUDED_GROUPS } from '../constants'
+import { EXCLUDED_GROUPS, TOKEN_UNIT_DIVISORS } from '../constants'
 import { computeEstimate } from '../lib/calculator'
 import { isDynamicPricingModel } from '../lib/dynamic-price'
 import type { PricingModel, TokenUnit } from '../types'
@@ -37,10 +37,20 @@ type PricingCalculatorProps = {
   showRechargePrice: boolean
 }
 
+function normalizeMinimumValue(value: string, minimum: number): string {
+  if (value === '') return value
+
+  const numberValue = Number(value)
+  return Number.isFinite(numberValue) && numberValue < minimum
+    ? String(minimum)
+    : value
+}
+
 export function PricingCalculator({
   models,
   priceRate,
   usdExchangeRate,
+  tokenUnit,
   showRechargePrice,
 }: PricingCalculatorProps) {
   const { t } = useTranslation()
@@ -79,9 +89,11 @@ export function PricingCalculator({
     return computeEstimate({
       model: selectedModel,
       group,
-      inputTokens: Number(inputTokens) || 0,
-      outputTokens: Number(outputTokens) || 0,
-      requests: perRequest ? Number(requests) || 1 : Number(requests) || 0,
+      inputTokens: Math.max(Number(inputTokens) || 0, 0),
+      outputTokens: Math.max(Number(outputTokens) || 0, 0),
+      requests: perRequest
+        ? Math.max(Number(requests) || 1, 1)
+        : Math.max(Number(requests) || 0, 0),
       showRechargePrice,
       priceRate,
       usdExchangeRate,
@@ -99,24 +111,26 @@ export function PricingCalculator({
     usdExchangeRate,
   ])
 
-  const formatUnit = (value: number) =>
+  const formatAmount = (value: number) =>
     formatBillingCurrencyFromUSD(value, {
       digitsLarge: 4,
       digitsSmall: 6,
       abbreviate: false,
     })
 
-  const formatTotal = (value: number) =>
-    formatBillingCurrencyFromUSD(value, {
+  const formatTokenUnit = (value: number) =>
+    formatBillingCurrencyFromUSD(value / TOKEN_UNIT_DIVISORS[tokenUnit], {
       digitsLarge: 4,
       digitsSmall: 6,
       abbreviate: false,
     })
+
+  const tokenUnitLabel = tokenUnit === 'K' ? t('/ 1K tokens') : t('/ 1M tokens')
 
   return (
-    <section className='brand-card border-t border-[rgba(110,91,255,0.45)] bg-[rgba(14,14,22,0.55)] p-5 shadow-[0_-1px_18px_rgba(110,91,255,0.12)] sm:p-6'>
+    <section className='brand-card p-5 sm:p-6'>
       <div className='mb-4'>
-        <h2 className='brand-glow-text text-lg leading-tight font-semibold'>
+        <h2 className='text-lg leading-tight font-semibold'>
           {t('Price Calculator')}
         </h2>
         <p className='text-muted-foreground mt-1 text-sm'>
@@ -139,7 +153,7 @@ export function PricingCalculator({
               setSelectedModelName(e.target.value)
               setSelectedGroup('')
             }}
-            className='text-foreground focus-visible:border-primary/60 h-10 rounded-lg border border-[rgba(139,124,255,0.16)] bg-[rgba(20,20,32,0.72)] px-3 text-sm outline-none'
+            className='text-foreground focus-visible:border-ring border-input h-10 rounded-md border bg-transparent px-3 text-sm outline-none'
           >
             <option value=''>{t('Select a model')}</option>
             {models.map((m) => (
@@ -175,7 +189,7 @@ export function PricingCalculator({
               id='calculator-group'
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
-              className='text-foreground focus-visible:border-primary/60 h-10 rounded-lg border border-[rgba(139,124,255,0.16)] bg-[rgba(20,20,32,0.72)] px-3 text-sm outline-none'
+              className='text-foreground focus-visible:border-ring border-input h-10 rounded-md border bg-transparent px-3 text-sm outline-none'
             >
               <option value=''>{t('Select group')}</option>
               {availableGroups.map((g) => (
@@ -204,8 +218,11 @@ export function PricingCalculator({
                 min={1}
                 value={requests}
                 onChange={(e) => setRequests(e.target.value)}
+                onBlur={(e) =>
+                  setRequests(normalizeMinimumValue(e.target.value, 1))
+                }
                 placeholder='1'
-                className='text-foreground focus-visible:border-primary/60 h-10 rounded-lg border border-[rgba(139,124,255,0.16)] bg-[rgba(20,20,32,0.72)] px-3 text-sm outline-none'
+                className='text-foreground focus-visible:border-ring border-input h-10 rounded-md border bg-transparent px-3 text-sm outline-none'
               />
             </div>
           ) : (
@@ -223,8 +240,11 @@ export function PricingCalculator({
                   min={0}
                   value={inputTokens}
                   onChange={(e) => setInputTokens(e.target.value)}
+                  onBlur={(e) =>
+                    setInputTokens(normalizeMinimumValue(e.target.value, 0))
+                  }
                   placeholder='0'
-                  className='text-foreground focus-visible:border-primary/60 h-10 rounded-lg border border-[rgba(139,124,255,0.16)] bg-[rgba(20,20,32,0.72)] px-3 text-sm outline-none'
+                  className='text-foreground focus-visible:border-ring border-input h-10 rounded-md border bg-transparent px-3 text-sm outline-none'
                 />
               </div>
               <div className='flex flex-col gap-2'>
@@ -240,8 +260,11 @@ export function PricingCalculator({
                   min={0}
                   value={outputTokens}
                   onChange={(e) => setOutputTokens(e.target.value)}
+                  onBlur={(e) =>
+                    setOutputTokens(normalizeMinimumValue(e.target.value, 0))
+                  }
                   placeholder='0'
-                  className='text-foreground focus-visible:border-primary/60 h-10 rounded-lg border border-[rgba(139,124,255,0.16)] bg-[rgba(20,20,32,0.72)] px-3 text-sm outline-none'
+                  className='text-foreground focus-visible:border-ring border-input h-10 rounded-md border bg-transparent px-3 text-sm outline-none'
                 />
               </div>
             </>
@@ -250,7 +273,7 @@ export function PricingCalculator({
       )}
 
       {selectedModel && breakdown && (
-        <div className='mt-5 rounded-lg border border-[rgba(110,91,255,0.18)] bg-[rgba(20,20,32,0.55)] p-4'>
+        <div className='border-border bg-muted/30 mt-5 rounded-md border p-4'>
           <div className='flex items-center justify-between gap-3'>
             <span className='text-muted-foreground text-sm font-medium'>
               {t('Estimated cost')}
@@ -261,8 +284,8 @@ export function PricingCalculator({
               </span>
             )}
           </div>
-          <p className='brand-gradient-text mt-1 text-2xl font-bold'>
-            {formatTotal(breakdown.totalCostUSD)}
+          <p className='mt-1 text-2xl font-bold'>
+            {formatAmount(breakdown.totalCostUSD)}
           </p>
 
           <div className='text-muted-foreground mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs'>
@@ -270,7 +293,7 @@ export function PricingCalculator({
               <span>
                 {t('Per request')}:{' '}
                 <span className='text-foreground'>
-                  {formatUnit(breakdown.unitPerRequest)}
+                  {formatAmount(breakdown.unitPerRequest)}
                 </span>
               </span>
             ) : (
@@ -278,16 +301,16 @@ export function PricingCalculator({
                 <span>
                   {t('Input')}:{' '}
                   <span className='text-foreground'>
-                    {formatUnit(breakdown.inputUnitPerMillion)}
+                    {formatTokenUnit(breakdown.inputUnitPerMillion)}
                   </span>{' '}
-                  {t('/ 1M tokens')}
+                  <span>{tokenUnitLabel}</span>
                 </span>
                 <span>
                   {t('Output')}:{' '}
                   <span className='text-foreground'>
-                    {formatUnit(breakdown.outputUnitPerMillion)}
+                    {formatTokenUnit(breakdown.outputUnitPerMillion)}
                   </span>{' '}
-                  {t('/ 1M tokens')}
+                  <span>{tokenUnitLabel}</span>
                 </span>
               </>
             )}

@@ -274,32 +274,6 @@ For commercial licensing, please contact support@quantumnous.com
 
 /* Launch UI Animations and Effects - Matching Template Exactly */
 @layer utilities {
-  /* Gradient utilities */
-  .bg-radial {
-    background-image: radial-gradient(var(--tw-gradient-stops));
-  }
-
-  /* Glass morphism effects - matching Launch UI template */
-  .glass-1 {
-    @apply border-border from-card/80 to-card/40 dark:border-border/10 dark:border-b-border/5 dark:border-t-border/20 dark:from-card/5 dark:to-card/0 border bg-linear-to-b;
-  }
-
-  .glass-2 {
-    @apply border-border from-card/100 to-card/80 dark:border-border/10 dark:border-b-border/5 dark:border-t-border/20 dark:from-card/10 dark:to-card/5 border bg-linear-to-b;
-  }
-
-  .glass-3 {
-    @apply border-border from-card/30 to-card/20 dark:border-border/10 dark:border-t-border/20 dark:border-b-border/5 dark:from-primary/5 dark:to-primary/2 border bg-linear-to-b;
-  }
-
-  .glass-4 {
-    @apply border-border border-b-input/90 from-card/60 to-card/20 dark:border-border/10 dark:border-t-border/30 dark:from-primary/10 dark:to-primary/5 border bg-linear-to-b dark:border-b-0;
-  }
-
-  .glass-5 {
-    @apply border-border border-b-input from-card/100 to-card/20 dark:border-border/10 dark:border-t-border/30 dark:from-primary/15 dark:to-primary/5 border bg-linear-to-b dark:border-b-0;
-  }
-
   /* Fade effects - matching Launch UI template */
   .fade-x {
     mask-image: linear-gradient(
@@ -405,38 +379,13 @@ For commercial licensing, please contact support@quantumnous.com
     }
   }
 
-  /* Vertical scroll animation for icon lists */
-  @keyframes scroll-up {
-    0% {
-      transform: translateY(0);
-    }
-    100% {
-      transform: translateY(-50%);
-    }
-  }
-
-  .animate-scroll-up {
-    animation: scroll-up 20s linear infinite;
-    will-change: transform;
-  }
-
-  .animate-scroll-down {
-    animation: scroll-up 20s linear infinite reverse;
-    will-change: transform;
-  }
-
-  /* Pause animation on hover */
-  .scroll-container:hover .animate-scroll-up,
-  .scroll-container:hover .animate-scroll-down {
-    animation-play-state: paused;
-  }
+  /* Reduced-motion fallback: the appear utilities above and the table
+   * stagger are the only remaining animated members of this layer. */
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-appear,
   .animate-appear-zoom,
-  .animate-scroll-up,
-  .animate-scroll-down,
   [data-slot='table'] tbody tr {
     animation: none !important;
     opacity: 1;
@@ -629,50 +578,6 @@ For commercial licensing, please contact support@quantumnous.com
 .content-auto {
   content-visibility: auto;
   contain-intrinsic-size: 0 80px;
-}
-
-/* ── Hero terminal demo animations ── */
-@keyframes terminal-demo-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-.terminal-demo-blink {
-  animation: terminal-demo-blink 1s step-end infinite;
-}
-
-@keyframes terminal-demo-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.terminal-demo-spin {
-  animation: terminal-demo-spin 0.8s linear infinite;
-}
-
-@keyframes terminal-demo-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-}
-.terminal-demo-pulse {
-  animation: terminal-demo-pulse 1.5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .terminal-demo-blink,
-  .terminal-demo-spin,
-  .terminal-demo-pulse {
-    animation: none !important;
-  }
 }
 
 /* ── Auto group flowing border ── */

@@ -68,7 +68,7 @@ export function DocsToc({
           'block rounded-md px-3 py-1.5 text-sm transition-colors',
           nested ? 'pl-6 text-[0.8125rem]' : '',
           isActive
-            ? 'text-foreground bg-[rgba(110,91,255,0.12)]'
+            ? 'text-foreground bg-[rgba(232,163,61,0.12)]'
             : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
         )}
       >
@@ -130,7 +130,7 @@ export function DocsToc({
           drawerOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         )}
       >
-        <div className='flex items-center justify-between border-b border-[rgba(110,91,255,0.12)] px-6 py-4'>
+        <div className='flex items-center justify-between border-b border-[rgba(232,163,61,0.12)] px-6 py-4'>
           <span className='text-sm font-semibold'>
             {t('Documentation contents')}
           </span>

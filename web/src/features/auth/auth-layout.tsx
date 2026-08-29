@@ -20,44 +20,95 @@ import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
 import { Skeleton } from '@/components/ui/skeleton'
+import { BRAND_SLOGAN } from '@/config/brand'
 import { useSystemConfig } from '@/hooks/use-system-config'
 
 type AuthLayoutProps = {
   children: React.ReactNode
 }
 
+// Plain, verifiable facts for the brand panel. Hairline separated, no icons.
+const BRAND_FACTS = [
+  'OpenAI-compatible endpoint for your existing SDK',
+  'Per-token billing with itemized usage logs',
+  'Open-source core, auditable under AGPL',
+] as const
+
+/**
+ * Split auth shell (lg+): warm brand panel on the left, flat form area on
+ * the right. Below lg it collapses to a single column with a compact brand
+ * row. Forms are no longer wrapped in a glass card.
+ */
 export function AuthLayout({ children }: AuthLayoutProps) {
   const { t } = useTranslation()
   const { systemName, logo, loading } = useSystemConfig()
+  const currentYear = new Date().getFullYear()
+
+  const brandRow = loading ? (
+    <>
+      <Skeleton className='size-8 rounded-lg' />
+      <Skeleton className='h-5 w-24' />
+    </>
+  ) : (
+    <>
+      <img
+        src={logo}
+        alt={t('Logo')}
+        className='size-8 rounded-lg object-contain'
+      />
+      <span className='text-base font-medium'>{systemName}</span>
+    </>
+  )
 
   return (
-    <div className='relative grid h-svh max-w-none'>
-      <Link
-        to='/'
-        className='absolute top-4 left-4 z-10 flex items-center gap-2 transition-opacity hover:opacity-80 sm:top-8 sm:left-8'
-      >
-        <div className='relative h-8 w-8'>
-          {loading ? (
-            <Skeleton className='absolute inset-0 rounded-full' />
-          ) : (
-            <img
-              src={logo}
-              alt={t('Logo')}
-              className='h-8 w-8 rounded-full object-cover'
-            />
-          )}
+    <div className='grid min-h-svh lg:grid-cols-2'>
+      {/* Brand panel (lg+) */}
+      <aside className='bg-section border-border relative hidden flex-col justify-between overflow-hidden p-10 lg:flex lg:border-r xl:p-14'>
+        <Link
+          to='/'
+          className='flex items-center gap-2.5 transition-opacity hover:opacity-80'
+        >
+          {brandRow}
+        </Link>
+
+        <div className='max-w-md'>
+          <p className='text-3xl leading-[1.2] font-medium'>
+            {t(BRAND_SLOGAN)}
+          </p>
+          <ul className='mt-10 space-y-4'>
+            {BRAND_FACTS.map((fact) => (
+              <li
+                key={fact}
+                className='border-border/70 text-muted-foreground border-t pt-4 text-sm'
+              >
+                {t(fact)}
+              </li>
+            ))}
+          </ul>
         </div>
-        {loading ? (
-          <Skeleton className='h-6 w-24' />
-        ) : (
-          <h1 className='text-xl font-medium'>{systemName}</h1>
-        )}
-      </Link>
-      <div className='container flex items-center pt-16 sm:pt-0'>
-        <div className='brand-card relative z-10 mx-auto flex w-full animate-[brand-zoom-in_0.5s_ease-out] flex-col justify-center space-y-2 rounded-xl p-8 px-4 py-8 sm:w-[480px] sm:p-8'>
-          {children}
+
+        <p className='text-muted-foreground/60 text-xs'>
+          &copy; {currentYear}{' '}
+          {loading ? <Skeleton className='h-3 w-20' /> : systemName}
+        </p>
+      </aside>
+
+      {/* Form area */}
+      <main className='flex flex-col'>
+        <div className='flex items-center p-4 lg:hidden'>
+          <Link
+            to='/'
+            className='flex items-center gap-2 transition-opacity hover:opacity-80'
+          >
+            {brandRow}
+          </Link>
         </div>
-      </div>
+        <div className='flex flex-1 items-center justify-center px-6 py-10'>
+          <div className='w-full max-w-[400px] animate-[brand-zoom-in_0.4s_ease-out]'>
+            {children}
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

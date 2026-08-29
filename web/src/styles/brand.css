@@ -18,10 +18,11 @@ For commercial licensing, please contact support@quantumnous.com
 */
 /* ============================================================
    Brand Design System — 品牌设计系统工具层
-   mimo 风：深色 #0a0a0f + 蓝紫渐变 #6e5bff 系 + 毛玻璃。
-   本文件承载品牌专属 token、GeistMono @font-face 与 brand-*
-   工具类与全局品牌元素样式（滚动条 / 焦点态 / 选区 / body
-   基础字重等）。全局品牌元素样式在此集中维护。
+   暖石墨暗色：#14120f 暖调近黑 + 米白主按钮 + 琥珀强调，实色暖面
+   + 1px 发丝线，无毛玻璃、无辉光、无渐变底板。本文件承载
+   GeistMono @font-face 与 brand-* 工具类及全局品牌元素样式
+   （滚动条 / 焦点态 / 选区 / body 基础字重）。全局品牌元素样式
+   在此集中维护。
    ============================================================ */
 
 /* GeistMono 等宽字体（品牌等宽字体源；供 --font-mono 使用；
@@ -36,29 +37,22 @@ For commercial licensing, please contact support@quantumnous.com
 
 @layer base {
   :root {
-    /* ---- 品牌 token ---- */
-    --brand-primary: #6e5bff; /* 主色：蓝紫 */
-    --brand-primary-hover: #8577ff; /* 悬停亮紫 */
-    --brand-accent: #9d8cff; /* 辅助浅紫 */
-    --brand-sky: #38bdf8; /* 点缀天蓝（图表/信息） */
-    --brand-gradient: linear-gradient(
-      135deg,
-      #5b8cff 0%,
-      #6e5bff 48%,
-      #9d6bff 100%
-    ); /* 蓝紫品牌渐变 */
-    --brand-glow-color: rgba(110, 91, 255, 0.25); /* 光晕基色 */
+    /* ---- 品牌 token（暖石墨基座）----
+     * 原蓝紫系 --brand-primary/--brand-primary-hover/--brand-accent/
+     * --brand-sky/--brand-gradient/--brand-glow-color 全仓仅本文件
+     * 内部消费，已随压平重写退役；仅保留过渡曲线供工具类使用。 */
     --brand-ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* body 基础字重与抗锯齿补充（背景/文字/字体族由 index.css 的 body 覆盖） */
+  /* body 基础字重与抗锯齿补充（背景/文字/字体族由 index.css 的 body 覆盖）。
+   * 400 起：300 在 Windows 的 CJK 字体上渲染发虚。 */
   body {
-    font-weight: 300;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ---- 蓝紫细线滚动条 ---- */
+  /* ---- 中性暖细条滚动条 ---- */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -67,96 +61,42 @@ For commercial licensing, please contact support@quantumnous.com
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(110, 91, 255, 0.25);
+    background: rgba(236, 231, 221, 0.18);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(110, 91, 255, 0.55);
-    box-shadow: 0 0 8px rgba(110, 91, 255, 0.35);
+    background: rgba(236, 231, 221, 0.3);
   }
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(110, 91, 255, 0.3) transparent;
+    scrollbar-color: rgba(236, 231, 221, 0.2) transparent;
   }
 
-  /* 键盘焦点 = 发光聚焦态（无障碍） */
+  /* 键盘焦点 = 干净 1px 描边（无障碍），无发光 */
   :focus-visible {
-    outline: 1px solid var(--primary);
+    outline: 1px solid var(--ring);
     outline-offset: 2px;
-    box-shadow: 0 0 12px rgba(110, 91, 255, 0.35);
   }
 
   ::selection {
-    background: rgba(110, 91, 255, 0.25);
-    color: #fff;
+    background: rgba(232, 163, 61, 0.3);
   }
 }
 
 @layer components {
-  /* 渐变文字：标题 / slogan / 数字强调 */
-  .brand-gradient-text {
-    background: var(--brand-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* 渐变底板：主按钮 / 徽标底 / CTA（前景固定白字） */
-  .brand-gradient-bg {
-    background: var(--brand-gradient);
-    color: #ffffff;
-  }
-  .brand-gradient-bg:hover {
-    filter: brightness(1.08);
-  }
-
-  /* 品牌光晕：悬浮强调 */
-  .brand-glow {
-    box-shadow:
-      0 0 24px var(--brand-glow-color),
-      0 0 64px rgba(110, 91, 255, 0.12);
-  }
-  .brand-glow-sm {
-    box-shadow: 0 0 16px rgba(110, 91, 255, 0.2);
-  }
-
-  /* 毛玻璃卡片微交互：悬浮上浮 + 边框点亮 */
+  /* 品牌卡片：实色暖面 + 发丝边（无毛玻璃、无悬浮上浮、无点亮阴影） */
   .brand-card {
-    background: rgba(20, 20, 32, 0.72);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(139, 124, 255, 0.16);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: calc(var(--radius) * 1.4);
-    transition:
-      transform 150ms var(--brand-ease),
-      border-color 150ms var(--brand-ease),
-      box-shadow 150ms var(--brand-ease);
+    transition: border-color 150ms var(--brand-ease);
   }
   .brand-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(139, 124, 255, 0.45);
-    box-shadow:
-      0 12px 32px rgba(0, 0, 0, 0.4),
-      0 0 24px rgba(110, 91, 255, 0.14);
+    border-color: rgba(236, 231, 221, 0.22);
   }
 
-  /* 移动端降低 blur 保性能 */
-  @media (max-width: 768px) {
-    .brand-card {
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-  }
-
-  /* ---- 文字发光（品牌体系工具类） ---- */
-  .brand-glow-text {
-    color: var(--primary);
-    text-shadow:
-      0 0 8px rgba(110, 91, 255, 0.6),
-      0 0 24px rgba(110, 91, 255, 0.25);
-  }
-
-  /* ---- 状态标签（圆点 + 文字；品牌体系 badge 工具类） ---- */
+  /* ---- 状态标签（圆点 + 文字；发丝边 chips，无 text-shadow/圆点发光；
+   * 变体颜色映射到语义状态色，B2 统一改名） ---- */
   .brand-tag {
     display: inline-flex;
     align-items: center;
@@ -173,44 +113,36 @@ For commercial licensing, please contact support@quantumnous.com
     height: 6px;
     border-radius: 50%;
     background: currentColor;
-    box-shadow:
-      0 0 6px currentColor,
-      0 0 12px currentColor;
   }
   .brand-tag-cyan {
-    color: var(--primary);
-    border-color: rgba(110, 91, 255, 0.4);
-    background: rgba(110, 91, 255, 0.07);
-    text-shadow: 0 0 8px rgba(110, 91, 255, 0.5);
+    color: var(--info);
+    border-color: color-mix(in srgb, var(--info) 40%, transparent);
+    background: color-mix(in srgb, var(--info) 8%, transparent);
   }
   .brand-tag-green {
     color: var(--success);
-    border-color: rgba(74, 222, 128, 0.4);
-    background: rgba(74, 222, 128, 0.07);
-    text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    border-color: color-mix(in srgb, var(--success) 40%, transparent);
+    background: color-mix(in srgb, var(--success) 8%, transparent);
   }
   .brand-tag-pink {
     color: var(--destructive);
-    border-color: rgba(255, 93, 143, 0.4);
-    background: rgba(255, 93, 143, 0.07);
-    text-shadow: 0 0 8px rgba(255, 93, 143, 0.5);
+    border-color: color-mix(in srgb, var(--destructive) 40%, transparent);
+    background: color-mix(in srgb, var(--destructive) 8%, transparent);
   }
   .brand-tag-purple {
-    color: var(--brand-accent);
-    border-color: rgba(157, 140, 255, 0.4);
-    background: rgba(157, 140, 255, 0.07);
-    text-shadow: 0 0 8px rgba(157, 140, 255, 0.5);
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
   }
   .brand-tag-amber {
     color: var(--warning);
-    border-color: rgba(251, 191, 36, 0.4);
-    background: rgba(251, 191, 36, 0.07);
-    text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    border-color: color-mix(in srgb, var(--warning) 40%, transparent);
+    background: color-mix(in srgb, var(--warning) 8%, transparent);
   }
   .brand-tag-gray {
     color: var(--muted-foreground);
-    border-color: rgba(154, 161, 181, 0.35);
-    background: rgba(154, 161, 181, 0.07);
+    border-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+    background: color-mix(in srgb, var(--muted-foreground) 8%, transparent);
   }
 }
 
@@ -218,31 +150,21 @@ For commercial licensing, please contact support@quantumnous.com
   .brand-card,
   .brand-card:hover {
     transition: none;
-    transform: none;
   }
 }
 
 /* ============================================================
    Keyframes — 品牌动画（不进 layer，与现状一致）
+   brand-pulse-glow 已随辉光体系删除；brand-zoom-in 保留
+   （AuthLayout 在用，克制入场）。
    ============================================================ */
 @keyframes brand-zoom-in {
   from {
     opacity: 0;
-    transform: scale(0.92) translateY(10px);
+    transform: scale(0.96) translateY(6px);
   }
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-  }
-}
-@keyframes brand-pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 14px rgba(110, 91, 255, 0.4);
-  }
-  50% {
-    box-shadow:
-      0 0 28px rgba(110, 91, 255, 0.8),
-      0 0 56px rgba(110, 91, 255, 0.3);
   }
 }

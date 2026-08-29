@@ -90,21 +90,6 @@ export function Rankings() {
   return (
     <PublicLayout showMainContainer={false}>
       <div className='relative'>
-        <div
-          aria-hidden
-          className='pointer-events-none absolute inset-x-0 top-0 h-[600px] opacity-20 dark:opacity-[0.10]'
-          style={{
-            background: [
-              'radial-gradient(circle, rgba(110,91,255,0.15), rgba(176,77,255,0.08) 40%, transparent 70%)',
-              'radial-gradient(circle, rgba(110,91,255,0.12), rgba(176,77,255,0.06) 45%, transparent 70%)',
-              'radial-gradient(circle, rgba(176,77,255,0.10), rgba(110,91,255,0.05) 50%, transparent 70%)',
-            ].join(', '),
-            maskImage:
-              'linear-gradient(to bottom, black 40%, transparent 100%)',
-            WebkitMaskImage:
-              'linear-gradient(to bottom, black 40%, transparent 100%)',
-          }}
-        />
         <PageTransition className='relative mx-auto w-full max-w-[1280px] space-y-8 px-3 pt-16 pb-10 sm:px-6 sm:pt-20 sm:pb-12 xl:px-8'>
           <RankingsHero period={period} onPeriodChange={handlePeriodChange} />
           {content}

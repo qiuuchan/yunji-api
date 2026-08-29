@@ -38,13 +38,13 @@ beforeAll(() => {
 })
 
 describe('home FAQ section', () => {
-  test('renders the eight landing FAQ entries as collapsed accordion triggers', () => {
+  test('renders the six landing FAQ entries as collapsed accordion triggers', () => {
     render(<FAQ />)
 
     const triggers = screen.getAllByRole('button')
-    expect(triggers).toHaveLength(8)
+    expect(triggers).toHaveLength(6)
     expect(triggers[0]).toHaveTextContent('faq.howToStart.question')
-    expect(triggers[7]).toHaveTextContent('faq.compatibility.question')
+    expect(triggers[5]).toHaveTextContent('faq.selfHost.question')
     for (const trigger of triggers) {
       expect(trigger).toHaveAttribute('aria-expanded', 'false')
     }

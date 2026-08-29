@@ -75,10 +75,11 @@ const ICON_TONE_BY_STAT_TONE: Record<StatCardTone, IconBadgeTone> = {
   'accent-3': 'chart-3',
 }
 
+// 图标不做辉光（暖石墨规范：禁发光）；保留键位以稳定各 tone 的映射。
 const ICON_GLOW_CLASSES: Record<StatCardTone, string> = {
-  'accent-1': 'shadow-[0_0_14px_rgba(110,91,255,0.5)]',
-  'accent-2': 'shadow-[0_0_14px_rgba(176,77,255,0.5)]',
-  'accent-3': 'shadow-[0_0_14px_rgba(57,255,136,0.5)]',
+  'accent-1': '',
+  'accent-2': '',
+  'accent-3': '',
 }
 
 const DETAIL_TONE_CLASSES: Record<StatCardDetailTone, string> = {
@@ -90,7 +91,7 @@ const DETAIL_TONE_CLASSES: Record<StatCardDetailTone, string> = {
 }
 
 const VALUE_TONE_CLASSES: Record<StatCardTone, string> = {
-  'accent-1': 'text-primary brand-glow-text',
+  'accent-1': 'text-primary ',
   'accent-2': 'text-accent',
   'accent-3': 'text-success',
 }

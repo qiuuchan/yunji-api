@@ -26,35 +26,35 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 
+// Six entries, hairline separated (AccordionItem ships border-b); the old
+// routing/enterprise entries moved to the dedicated pages that cover them.
 const FAQ_KEYS = [
   'faq.howToStart',
   'faq.modelsSupported',
   'faq.billing',
-  'faq.routing',
+  'faq.compatibility',
   'faq.security',
   'faq.selfHost',
-  'faq.enterprise',
-  'faq.compatibility',
 ] as const
 
 export function FAQ() {
   const { t } = useTranslation()
 
   return (
-    <section className='border-border/40 relative z-10 border-t px-6 py-24 md:py-32'>
+    <section className='border-border relative z-10 border-t px-6 py-24 md:py-32'>
       <div className='mx-auto max-w-3xl'>
-        <AnimateInView className='mb-12 text-center'>
-          <p className='mb-3 text-xs font-medium tracking-widest text-[#9d8cff] uppercase'>
-            {t('FAQ')}
-          </p>
-          <h2 className='text-2xl font-bold tracking-tight md:text-3xl'>
+        <AnimateInView className='mb-12 max-w-xl'>
+          <h2 className='text-3xl leading-[1.15] font-medium md:text-4xl'>
             {t('Frequently asked questions')}
           </h2>
+          <p className='text-muted-foreground mt-4 text-[15px]'>
+            {t('What people usually ask before switching over.')}
+          </p>
         </AnimateInView>
 
-        <Accordion className='border-border/40 rounded-2xl border'>
+        <Accordion>
           {FAQ_KEYS.map((key, i) => (
-            <AccordionItem key={key} value={`faq-${i}`} className='px-5'>
+            <AccordionItem key={key} value={`faq-${i}`}>
               <AccordionTrigger>{t(`${key}.question`)}</AccordionTrigger>
               <AccordionContent>
                 <p className='text-muted-foreground text-sm leading-relaxed'>

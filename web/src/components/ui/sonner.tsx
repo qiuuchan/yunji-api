@@ -78,12 +78,12 @@ const Toaster = (props: ToasterProps) => {
         {
           '--normal-bg': 'rgba(14,14,22,0.92)',
           '--normal-text': 'var(--foreground)',
-          '--normal-border': 'rgba(110,91,255,0.18)',
+          '--normal-border': 'rgba(232,163,61,0.18)',
           '--success-bg': 'rgba(14,14,22,0.92)',
           '--success-border': 'rgba(57,255,136,0.45)',
           '--success-text': 'var(--success)',
           '--info-bg': 'rgba(14,14,22,0.92)',
-          '--info-border': 'rgba(110,91,255,0.45)',
+          '--info-border': 'rgba(232,163,61,0.45)',
           '--info-text': 'var(--primary)',
           '--warning-bg': 'rgba(14,14,22,0.92)',
           '--warning-border': 'rgba(255,179,71,0.45)',
@@ -97,10 +97,10 @@ const Toaster = (props: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            'group toast group-[.toaster]:bg-[rgba(14,14,22,0.92)] group-[.toaster]:text-foreground group-[.toaster]:border-[rgba(110,91,255,0.18)] group-[.toaster]:backdrop-blur-xl group-[.toaster]:shadow-[0_0_24px_rgba(110,91,255,0.08)] group-[.toaster]:rounded-lg',
+            'group toast group-[.toaster]:bg-[rgba(14,14,22,0.92)] group-[.toaster]:text-foreground group-[.toaster]:border-[rgba(232,163,61,0.18)] group-[.toaster]:backdrop-blur-xl group-[.toaster]:rounded-lg',
           description: 'group-[.toast]:text-muted-foreground',
           actionButton:
-            'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:shadow-[0_0_12px_rgba(110,91,255,0.4)]',
+            'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',
           cancelButton:
             'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
           success: 'group-[.toaster]:border-[rgba(57,255,136,0.45)]',

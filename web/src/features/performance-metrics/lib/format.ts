@@ -79,7 +79,7 @@ const SUCCESS_RATE_DOT_CLASS: Record<SuccessRateLevel, string> = {
 // Hex colors for non-CSS contexts (e.g. chart libraries that need raw values).
 const SUCCESS_RATE_HEX_COLOR: Record<SuccessRateLevel, string> = {
   excellent: '#10b981', // emerald-500 (full green)
-  good: '#34d399', // emerald-400 (slightly lighter green)
+  good: '#7fb069', // emerald-400 (slightly lighter green)
   warning: '#f59e0b', // amber-500
   critical: '#ef4444', // red-500
   unknown: '#9ca3af', // gray-400

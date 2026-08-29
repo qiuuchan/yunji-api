@@ -402,7 +402,7 @@ export function UserAuthForm({
             {/* Submit Button */}
             <Button
               type='submit'
-              className='brand-glow-text mt-2 w-full animate-[brand-pulse-glow_2.4s_ease-in-out_infinite] justify-center gap-2'
+              className='mt-2 w-full justify-center gap-2'
               disabled={isLoading}
             >
               {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}

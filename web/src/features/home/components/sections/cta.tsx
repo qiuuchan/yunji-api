@@ -17,7 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, Building2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { AnimateInView } from '@/components/animate-in-view'
@@ -28,55 +28,42 @@ interface CTAProps {
   isAuthenticated?: boolean
 }
 
-export function CTA(_props: CTAProps) {
+/** Quiet closing CTA: one heading, one primary button, one text link. */
+export function CTA(props: CTAProps) {
   const { t } = useTranslation()
 
   return (
-    <section className='relative z-10 overflow-hidden px-6 py-24 md:py-32'>
-      {/* Gradient mesh background */}
-      <div
-        aria-hidden
-        className='absolute inset-0 -z-10 opacity-20 dark:opacity-[0.08]'
-        style={{
-          background: [
-            'radial-gradient(ellipse 50% 50% at 30% 50%, rgba(110,91,255,0.5) 0%, transparent 70%)',
-            'radial-gradient(ellipse 40% 40% at 70% 40%, rgba(56,189,248,0.3) 0%, transparent 70%)',
-          ].join(', '),
-        }}
-      />
-
-      <AnimateInView
-        className='mx-auto max-w-2xl text-center'
-        animation='scale-in'
-      >
-        <h2 className='text-2xl leading-tight font-bold tracking-tight md:text-4xl'>
-          {t('Ready to simplify')}
-          <br />
-          <span className='brand-gradient-text'>
-            {t('your AI integration?')}
-          </span>
+    <section className='relative z-10 px-6 py-24 md:py-32'>
+      <AnimateInView className='mx-auto max-w-2xl text-center'>
+        <h2 className='text-3xl leading-[1.15] font-medium md:text-4xl'>
+          {t('Create an account and send your first request')}
         </h2>
-        <p className='text-muted-foreground/80 mx-auto mt-5 max-w-md text-sm leading-relaxed md:text-base'>
-          {t(
-            'Start free in minutes, or talk to our team about a private deployment built for your scale.'
+        <div className='mt-9 flex flex-wrap items-center justify-center gap-4'>
+          {props.isAuthenticated ? (
+            <Button
+              className='group h-10 rounded-md px-5'
+              render={<Link to='/dashboard' />}
+            >
+              {t('Go to Dashboard')}
+              <ArrowRight className='ml-1.5 size-4 transition-transform duration-200 group-hover:translate-x-0.5' />
+            </Button>
+          ) : (
+            <>
+              <Button
+                className='group h-10 rounded-md px-5'
+                render={<Link to='/register' />}
+              >
+                {t('Start for free')}
+                <ArrowRight className='ml-1.5 size-4 transition-transform duration-200 group-hover:translate-x-0.5' />
+              </Button>
+              <Link
+                to='/enterprise'
+                className='text-muted-foreground hover:text-foreground text-sm underline-offset-4 hover:underline'
+              >
+                {t('Talk to Enterprise')}
+              </Link>
+            </>
           )}
-        </p>
-        <div className='mt-8 flex flex-wrap items-center justify-center gap-3'>
-          <Button
-            className='brand-gradient-bg group rounded-lg'
-            render={<Link to='/register' />}
-          >
-            {t('Start for free')}
-            <ArrowRight className='ml-1 size-3.5 transition-transform duration-200 group-hover:translate-x-0.5' />
-          </Button>
-          <Button
-            variant='outline'
-            className='border-border/50 rounded-lg hover:border-[rgba(110,91,255,0.5)] hover:bg-[rgba(110,91,255,0.06)]'
-            render={<a href='/enterprise' />}
-          >
-            <Building2 className='mr-1.5 size-4' />
-            {t('Talk to Enterprise')}
-          </Button>
         </div>
       </AnimateInView>
     </section>

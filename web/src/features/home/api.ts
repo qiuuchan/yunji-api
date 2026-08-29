@@ -32,3 +32,22 @@ export async function getHomePageContent(): Promise<HomePageContentResponse> {
   const res = await api.get('/api/home_page_content')
   return res.data
 }
+
+/**
+ * Get the public list of live models (anonymous endpoint used by the
+ * playground model plaza). Returns an empty array when the endpoint is
+ * unavailable so callers can degrade silently.
+ */
+export async function getPublicModels(): Promise<string[]> {
+  const res = await api.get('/api/pg/models', {
+    skipAuthRefresh: true,
+    skipErrorHandler: true,
+  } as Record<string, unknown>)
+  const { data } = res
+
+  if (!data.success || !Array.isArray(data.data)) {
+    return []
+  }
+
+  return data.data
+}

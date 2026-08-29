@@ -125,7 +125,8 @@
 
 - 以 Tailwind 工具类为主，动态类名用 `cn()` 合并；非动态场景避免内联样式。
 - 响应式采用移动优先与 Tailwind 断点（`sm:`、`md:`、`lg:` 等）；主题与暗色用 CSS 变量与 `dark:`，自定义样式集中在 `src/styles/`，组件内尽量少写自定义 CSS。
-- **品牌暗色主题（mimo 风）固定 dark 配色**：全站为纯暗色品牌主题（深色 `#0a0a0f` 底 + 蓝紫主色 `#6e5bff` 系渐变 + 毛玻璃），明暗切换与主题预设系统已移除，`useTheme()` 恒返 `'dark'`。语义 token（`--background`/`--primary` 等）集中在 `src/styles/theme.css` 的 `@theme inline` 与 `:root,.dark` 块；品牌专属 token、GeistMono `@font-face` 与新工具类（`.brand-gradient-text` / `.brand-gradient-bg` / `.brand-glow` / `.brand-card` 等）集中在 `src/styles/brand.css`。新增组件优先使用语义 token 与 brand 工具类，避免引入明/暗分支或主题预设逻辑。
+- **品牌暗色主题（暖石墨，2026-08-28 起）固定 dark 配色**：全站为纯暗色品牌主题（暖调近黑 `#14120f` 底 + 米白主色 `#f0e9dc`——主按钮米白底深字 + 唯一强调色琥珀 `#e8a33d`，克制用于激活态/焦点/关键数字），质感为实色暖面 + 1px 中性暖发丝线（`--border`/`--input`），**禁毛玻璃、禁辉光、禁渐变底板、禁网格/径向装饰底**。明暗切换与主题预设系统已移除，`useTheme()` 恒返 `'dark'`。语义 token（`--background`/`--primary`/`--section` 等）集中在 `src/styles/theme.css` 的 `@theme inline` 与 `:root,.dark` 块；GeistMono `@font-face` 与 brand 工具类集中在 `src/styles/brand.css`。**注意**：`--font-sans` 已带显式 CJK 栈（PingFang SC / Microsoft YaHei 等），body 字重 400。新增组件优先使用语义 token，避免引入明/暗分支或主题预设逻辑。
+- **暖石墨全站扫尾（2026-08-29 B2 完成）**：全仓 44 个文件的蓝紫硬编码（`#6e5bff`/`#9d8cff`/`rgba(110,91,255,*)`/`#38bdf8` 等）已全部清除或映射为暖系等价色，硬编码辉光阴影全部删除；压平的过渡别名类（`.brand-gradient-text`/`.brand-gradient-bg`/`.brand-glow*`）用法清零后已从 `brand.css` 删除（保留 `.brand-card`/`.brand-tag*`/`--brand-ease`）；`index.css` 的 `glass-1~5`、`.bg-radial` 及无引用的 `layout/components/glow.tsx` 已删；dashboard/pricing/rankings 图表色板统一为与 `--chart-1..5` 同族的暖五色循环（厂商品牌识别色除外，属数据语义）。图表/图表库默认主题的蓝色系列已显式指定暖色序列。**新增代码禁止出现蓝紫系字面量**，装饰性辉光一律不用；图表新系列色从暖五色取。
 - **命名清理（2026-08-24 已完成）**：一期「桥接策略」遗留的 cyber/neon 命名已在二期 D1 全部清理——`src/styles/cyber.css` 已删除，历史类名（`glass-panel`、`neon-tag`、`glow-cyan`、`font-cyber-mono`）统一为 brand 体系（`brand-card`、`brand-tag`、`brand-glow-text`、Tailwind `font-mono`），`--cyber-*` 变量映射为语义 token（`--primary`/`--success`/`--warning`/`--destructive`/`--brand-accent` 等）。**禁止在新代码中新增 `cyber-*` / `neon-*` 命名**；全局品牌元素样式（滚动条 / 焦点态 / 选区 / body 字重）与品牌工具类集中维护于 `brand.css`。
 
 ### 3.11 文件组织
@@ -199,3 +200,5 @@
 - **2026-08-23**：3.10 改版：赛博霓虹暗色主题 → 品牌暗色设计系统（深色 `#0a0a0f` + 蓝紫 `#6e5bff` 系）；新增 cyber 过渡别名层（桥接策略）与技术债清理约定；品牌工具类集中于 `brand.css`。
 - **2026-08-24**：3.10 更新：D1 命名清理完成，cyber.css 已移除，cyber/neon 过渡别名层表述改为「已清理」状态。
 - **2026-08-25**：3.2 新增「Lint 门禁 scoped 执行」明文章规：门禁 lint 按变更文件 scoped 执行（`oxlint -c .oxlintrc.json <文件...>`），涉及文件 0 新增 error；全仓上游存量 error 已知不修，`package.json` lint script 不动。
+- **2026-08-28**：3.10 改版：mimo 蓝紫暗色 → **暖石墨暗色**（`#14120f` 底 / 米白主按钮 / 琥珀强调 / 发丝线，去毛玻璃辉光渐变）；`--radius` 12px→8px；`--font-sans` 加显式 CJK 栈、body 字重 300→400；新增 `--section` 分节暖面 token；brand 渐变/辉光工具类压平为废弃别名、`--brand-*` 蓝紫 token 退役；首页七节（Hero+代码卡/FactStrip/Capabilities/QuickStart/FAQ/Statement/CTA）与 AuthLayout 分屏重构落地（第三期第一批）。
+- **2026-08-29**：3.10 增补：B2 全站暖化扫尾完成——蓝紫硬编码清零、辉光影删除、brand 渐变/辉光工具类删除、glass-\*/bg-radial/glow.tsx 清理、图表色板统一暖五色；首页 Hero 增加 mimo 式品牌字水印 + 鼠标跟随反相透镜（`clip-path: circle()` 跟随、逐字 hover 微亮、触屏/reduced-motion 降级为静态水印）。

@@ -140,7 +140,7 @@ export function DataTablePagination<TData>({
                   className={cn(
                     'h-8 min-w-8 px-2 tabular-nums',
                     currentPage === pageNumber
-                      ? 'font-semibold border-primary/60 text-primary shadow-[0_0_12px_rgba(110,91,255,0.35)]'
+                      ? 'font-semibold border-primary/60 text-primary '
                       : 'text-muted-foreground hover:text-foreground'
                   )}
                   onClick={() => table.setPageIndex((pageNumber as number) - 1)}

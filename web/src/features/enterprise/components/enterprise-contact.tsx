@@ -50,11 +50,11 @@ export function EnterpriseContact() {
   return (
     <section
       aria-labelledby='enterprise-contact-heading'
-      className='brand-card mx-auto mt-16 max-w-4xl p-8 text-center md:p-10'
+      className='border-border bg-section mx-auto mt-16 max-w-4xl rounded-lg border p-8 text-center md:p-10'
     >
       <h2
         id='enterprise-contact-heading'
-        className='brand-gradient-text text-2xl font-bold tracking-tight md:text-3xl'
+        className='text-2xl font-bold tracking-tight md:text-3xl'
       >
         {t('Talk to our team')}
       </h2>
@@ -69,7 +69,7 @@ export function EnterpriseContact() {
           <img
             src={BRAND_CONTACT_QR_SRC}
             alt={t('Scan the QR code to contact our team')}
-            className='size-36 rounded-xl border border-[rgba(139,124,255,0.25)] bg-white/90 p-2'
+            className='size-36 rounded-xl border border-[rgba(232,163,61,0.25)] bg-white/90 p-2'
             width={144}
             height={144}
           />

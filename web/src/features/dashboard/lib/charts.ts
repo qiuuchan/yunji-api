@@ -38,7 +38,7 @@ type TooltipLineItem = {
 }
 
 export function getDashboardChartColors(domainLength: number): string[] {
-  const BRAND_PALETTE = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
+  const BRAND_PALETTE = ['#f0e9dc', '#e8a33d', '#c97b4a', '#7fb069', '#8f8678']
 
   // Cycle the brand 5-color set so every series maps to a brand hue.
   const colors: string[] = []
@@ -685,7 +685,7 @@ export function processChartData(
   }
 }
 
-const USER_COLORS = ['#38bdf8', '#6e5bff', '#f472b6', '#34d399', '#fbbf24']
+const USER_COLORS = ['#f0e9dc', '#e8a33d', '#c97b4a', '#7fb069', '#8f8678']
 
 export function processUserChartData(
   data: QuotaDataItem[],

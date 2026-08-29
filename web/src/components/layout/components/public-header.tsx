@@ -105,7 +105,7 @@ export function PublicHeader(props: PublicHeaderProps) {
     authButton = (
       <Button
         size='sm'
-        className='h-8 rounded-lg px-3.5 text-xs font-medium'
+        className='h-8 rounded-md px-3.5 text-xs font-medium'
         render={<Link to='/sign-in' />}
       >
         {t('Sign in')}
@@ -207,18 +207,13 @@ export function PublicHeader(props: PublicHeaderProps) {
   return (
     <>
       <header className='pointer-events-none fixed inset-x-0 top-0 z-50'>
-        <div
-          className={cn(
-            'pointer-events-auto mx-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
-            scrolled ? 'max-w-[52rem] px-3 pt-3' : 'max-w-7xl px-4 pt-0 md:px-6'
-          )}
-        >
+        <div className='pointer-events-auto mx-auto max-w-[1260px] px-4 md:px-6'>
           <nav
             className={cn(
-              'flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
+              'flex h-14 items-center justify-between transition-colors duration-200',
               scrolled
-                ? 'bg-[rgba(5,6,11,0.6)] border border-[rgba(110,91,255,0.18)] h-12 rounded-2xl pr-1.5 pl-4 shadow-[0_0_24px_-6px_rgba(110,91,255,0.35)] backdrop-blur-2xl'
-                : 'h-16 px-2 border-b border-[rgba(110,91,255,0.12)]'
+                ? 'border-border bg-[rgba(20,18,15,0.92)] border-b'
+                : 'border-b border-transparent'
             )}
           >
             {/* Logo */}
@@ -238,6 +233,13 @@ export function PublicHeader(props: PublicHeaderProps) {
             <div className='hidden items-center gap-0.5 sm:flex'>
               {links.map((link) => {
                 const isActive = pathname === link.href
+                const linkClassName = cn(
+                  'relative flex h-14 items-center px-3 text-sm transition-colors duration-200',
+                  isActive
+                    ? 'text-foreground after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-accent'
+                    : 'text-muted-foreground hover:text-foreground',
+                  link.disabled && 'pointer-events-none opacity-50'
+                )
                 if (link.external) {
                   return (
                     <a
@@ -248,10 +250,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                       aria-disabled={link.disabled}
                       tabIndex={link.disabled ? -1 : undefined}
                       onClick={(event) => handleNavLinkClick(event, link)}
-                      className={cn(
-                        'text-muted-foreground hover:text-foreground rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200',
-                        link.disabled && 'pointer-events-none opacity-50'
-                      )}
+                      className={linkClassName}
                     >
                       {t(link.title)}
                     </a>
@@ -262,14 +261,9 @@ export function PublicHeader(props: PublicHeaderProps) {
                     key={link.href || link.title}
                     to={link.href}
                     disabled={link.disabled}
+                    aria-current={isActive ? 'page' : undefined}
                     onClick={(event) => handleNavLinkClick(event, link)}
-                    className={cn(
-                      'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200',
-                      isActive
-                        ? 'text-foreground'
-                        : 'text-muted-foreground hover:text-foreground',
-                      link.disabled && 'pointer-events-none opacity-50'
-                    )}
+                    className={linkClassName}
                   >
                     {t(link.title)}
                   </Link>

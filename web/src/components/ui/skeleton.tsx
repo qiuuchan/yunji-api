@@ -23,7 +23,7 @@ function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot='skeleton'
       className={cn(
-        'bg-muted animate-pulse rounded-md bg-[rgba(110,91,255,0.08)]',
+        'bg-muted animate-pulse rounded-md bg-[rgba(232,163,61,0.08)]',
         className
       )}
       {...props}

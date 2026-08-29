@@ -262,4 +262,26 @@ describe('computeEstimate — non-finite guards', () => {
     expect(Number.isFinite(r.totalCostUSD)).toBe(true)
     expect(r.totalCostUSD).toBe(0)
   })
+
+  test('negative quantities are clamped so estimates never become credits', () => {
+    const tokenResult = computeEstimate({
+      model: tokenModel({
+        model_ratio: 2,
+        completion_ratio: 1.5,
+      }),
+      inputTokens: -1_000_000,
+      outputTokens: -1_000_000,
+    })
+    expect(tokenResult.totalCostUSD).toBe(0)
+    expect(tokenResult.inputCostUSD).toBe(0)
+    expect(tokenResult.outputCostUSD).toBe(0)
+
+    const requestResult = computeEstimate({
+      model: tokenModel({ quota_type: 1, model_price: 0.5 }),
+      inputTokens: 0,
+      outputTokens: 0,
+      requests: -2,
+    })
+    expect(requestResult.totalCostUSD).toBe(0)
+  })
 })
