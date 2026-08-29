@@ -45,10 +45,17 @@ import { SettingsSection } from '../components/settings-section'
 import { useSettingsForm } from '../hooks/use-settings-form'
 import { useUpdateOption } from '../hooks/use-update-option'
 
+// 允许完整 URL 或以 / 开头的站内相对路径（如 /brand/logo.png）
+const logoUrlSchema = z
+  .string()
+  .refine((v) => /^https?:\/\//.test(v) || v.startsWith('/'))
+  .optional()
+  .or(z.literal(''))
+
 const _systemInfoSchema = z.object({
   SystemName: z.string().min(1),
   ServerAddress: z.string().optional(),
-  Logo: z.string().url().optional().or(z.literal('')),
+  Logo: logoUrlSchema,
   Footer: z.string().optional(),
   About: z.string().optional(),
   HomePageContent: z.string().optional(),
@@ -91,7 +98,7 @@ export function SystemInfoSection({ defaultValues }: SystemInfoSectionProps) {
       error: () => t('System name is required'),
     }),
     ServerAddress: z.string().optional(),
-    Logo: z.string().url().optional().or(z.literal('')),
+    Logo: logoUrlSchema,
     Footer: z.string().optional(),
     About: z.string().optional(),
     HomePageContent: z.string().optional(),
