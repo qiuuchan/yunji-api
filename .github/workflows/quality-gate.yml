@@ -1,0 +1,242 @@
+name: Quality Gate
+
+# Self-hosted gate for this fork. It runs alongside the upstream `.github/workflows/ci.yml`
+# (which only covers backend vet/build/test and frontend typecheck/test) and adds the
+# checks that CI was missing here: the full frontend gate (typecheck, scoped lint,
+# format, copyright, vitest, build) and the migration safety gate for `model/`.
+#
+# Note: `docker-build.yml` is intentionally untouched — it hardcodes the upstream
+# `calciumion/new-api` image namespace and is not reusable for this fork.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GOWORK: 'off'
+
+jobs:
+  migration-gate:
+    name: Migration safety gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Fail if model/ changed without review
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          PR_TEXT: ${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          marker='[migration-reviewed]'
+
+          changed="$(BASE_SHA="$BASE_SHA" HEAD_SHA="$HEAD_SHA" bash .github/scripts/changed-files.sh)" || exit 2
+          touched="$(printf '%s\n' "$changed" | grep '^model/' || true)"
+
+          if [ -z "$touched" ]; then
+            echo "model/ is untouched — migration gate passed."
+            {
+              echo '### Migration safety gate'
+              echo '`model/` is untouched by this diff. No schema migration review required.'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          reviewed=0
+          if printf '%s' "$PR_TEXT" | grep -qF "$marker"; then
+            reviewed=1
+          fi
+          if [ "$reviewed" -eq 0 ]; then
+            if git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+              messages="$(git log --no-merges --format=%B "$BASE_SHA..$HEAD_SHA" || true)"
+            else
+              messages="$(git log --no-merges --format=%B "$HEAD_SHA" || true)"
+            fi
+            if printf '%s' "$messages" | grep -qF "$marker"; then
+              reviewed=1
+            fi
+          fi
+
+          {
+            echo '### Migration safety gate'
+            echo 'This diff touches `model/`, which drives the production schema through'
+            echo '`AutoMigrate` in `model/main.go` (`migrateDB` / `migrateDBFast`).'
+            echo ''
+            echo 'Changed files under `model/`:'
+            echo ''
+            while IFS= read -r file; do
+              echo "- \`$file\`"
+            done <<< "$touched"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if printf '%s\n' "$touched" | grep -qx 'model/main.go'; then
+            {
+              echo ''
+              echo '> `model/main.go` is in this diff. Confirm that every new or changed model'
+              echo '> struct is registered in **both** `migrateDB` and `migrateDBFast`.'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if [ "$reviewed" -eq 1 ]; then
+            echo "Migration review acknowledged via $marker."
+            {
+              echo ''
+              echo "Migration review acknowledged with \`$marker\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          {
+            echo ''
+            echo '**Gate failed.** Required review before merge:'
+            echo ''
+            echo '1. Confirm the intended schema change and its rollback path.'
+            echo '2. Confirm it runs on SQLite, MySQL >= 5.7.8 and PostgreSQL >= 9.6.'
+            echo '3. Confirm new models are registered in both `migrateDB` and `migrateDBFast`.'
+            echo ''
+            echo "Re-run with \`$marker\` in the PR title or in a commit message on this branch"
+            echo 'to acknowledge the review and unblock the gate.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=Migration safety gate::model/ changed without $marker. See the job summary for the changed file list and review checklist."
+          exit 1
+
+  frontend:
+    name: Frontend gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: '1.3.14'
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Lint changed files (scoped oxlint)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          changed="$(BASE_SHA="$BASE_SHA" HEAD_SHA="$HEAD_SHA" bash .github/scripts/changed-files.sh)" || exit 2
+
+          targets=()
+          while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            case "$file" in
+              web/*) ;;
+              *) continue ;;
+            esac
+            relative="${file#web/}"
+            case "$relative" in
+              *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs) ;;
+              *) continue ;;
+            esac
+            # Mirrors .oxlintrc.json ignorePatterns.
+            case "$relative" in
+              src/components/ui/*|src/routeTree.gen.ts) continue ;;
+            esac
+            [ -f "web/$relative" ] || continue
+            targets+=("$relative")
+          done <<< "$changed"
+
+          if [ "${#targets[@]}" -eq 0 ]; then
+            echo 'No lintable frontend file changed — skipping oxlint.'
+            echo '### Scoped oxlint' >> "$GITHUB_STEP_SUMMARY"
+            echo 'No lintable frontend file changed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          {
+            echo "### Scoped oxlint (${#targets[@]} changed file(s))"
+            printf -- '- `%s`\n' "${targets[@]}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          cd web
+          bunx oxlint -c .oxlintrc.json "${targets[@]}"
+
+      - name: Format check
+        run: bun run format:check
+
+      - name: Copyright check
+        run: bun run copyright:check
+
+      - name: Test
+        run: bun run test
+
+      - name: Build
+        run: bun run build
+
+  backend:
+    name: Backend gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: |
+            go.sum
+            relaykit/go.sum
+
+      - name: Create frontend embed placeholder
+        run: |
+          mkdir -p web/dist
+          touch web/dist/index.html
+
+      - name: Vet root module
+        run: go vet ./...
+
+      - name: Vet relaykit independently
+        working-directory: relaykit
+        run: go vet ./...
+
+      - name: Build root module
+        run: go build ./...
+
+      - name: Build relaykit independently
+        working-directory: relaykit
+        run: go build ./...
+
+      - name: Test root and relaykit modules
+        # One retry: service/channel_affinity_usage_cache_test.go is flaky on coarse
+        # clocks (known upstream issue). See workorders/WO-G2-M-report.md.
+        run: |
+          set -o pipefail
+          make test || {
+            echo "::warning title=Backend tests::first attempt failed, retrying once (known flaky: service/channel_affinity_usage_cache_test.go)"
+            make test
+          }

@@ -77,7 +77,7 @@
 - **TypeScript**：避免 `any`，优先具体类型或 `unknown`；为参数与返回值显式标注类型；仅类型用途的导入使用 `import type { X } from '...'`。
 - **类型检查**：每次改动 TypeScript 或 TSX 代码后都要执行类型检查（如 `bun run typecheck`）；若出现类型错误，须修复至无错误为止，不得遗留。
 - **Lint 检查**：每次完成代码改动前，必须对所涉及文件执行 lint 检查，并修复这些文件中的所有 lint error；不得遗留 error。warning 可按变更范围与风险评估处理。
-- **Lint 门禁 scoped 执行（2026-08-25 明文化）**：全仓 `bun run lint`（`oxlint -c .oxlintrc.json .`）在基线 `20e6d4b8` 上存在上游继承的存量问题（322 error / 84 warning，分布于 ~170 个上游文件），非本期引入、不修上游文件。因此门禁 lint 按**变更文件 scoped** 执行：对本次改动涉及的每个文件运行 `npx oxlint -c .oxlintrc.json <文件...>`（或 `bunx oxlint`），涉及文件的 lint error 必须为 0、不得新增 error；全仓存量红属已知，不阻塞交付。`package.json` 的 lint script 保持不变。
+- **Lint 门禁 scoped 执行（2026-08-25 明文化，2026-08-31 接入 CI）**：全仓 `bun run lint`（`oxlint -c .oxlintrc.json .`）在基线 `20e6d4b8` 上存在上游继承的存量问题（322 error / 84 warning，分布于 ~170 个上游文件），非本期引入、不修上游文件。因此门禁 lint 按**变更文件 scoped** 执行：对本次改动涉及的每个文件运行 `npx oxlint -c .oxlintrc.json <文件...>`（或 `bunx oxlint`），涉及文件的 lint error 必须为 0、不得新增 error；全仓存量红属已知，不阻塞交付。`package.json` 的 lint script 保持不变。CI 侧由 `.github/workflows/quality-gate.yml` 的 `frontend` job 用同一逻辑执行：先经 `.github/scripts/changed-files.sh` 取 diff 变更文件，再按扩展名与 `.oxlintrc.json` 的 `ignorePatterns`（`src/components/ui`、`src/routeTree.gen.ts`）过滤后交给 oxlint；未变更的上游文件不进入门禁。禁止为了「让 CI 变绿」批量修上游存量，或把门禁改回全仓扫描。
 - **解构**：对象非必要不要进行解构，特别是组件的 props；直接使用 `props.xxx` 更清晰，避免不必要的解构增加代码复杂度。
 
 ### 3.3 组件
@@ -179,6 +179,8 @@
 - 使用 Rsbuild，配置见 `rsbuild.config.ts`；脚本以 `package.json` 为准（如 `bun run dev`、`bun run build`、`bun run typecheck`、`bun run lint`、`bun run format`），包管理见 [3.15 依赖管理](#315-依赖管理)。
 - 代码分割与懒加载策略见 [3.4 性能](#34-性能)；资源使用合适格式与压缩，环境变量用 `.env` 且以 `VITE_` 前缀，不在代码中硬编码。
 - **发布前**：执行 typecheck、lint、format 检查，完成生产构建并检查产物体积与环境变量配置。
+- **CI 门禁**：`main` 的 push/PR 会触发 `.github/workflows/quality-gate.yml` 的 `frontend` job，依次执行 `typecheck`、scoped lint（见 [3.2 代码风格与类型](#32-代码风格与类型)）、`format:check`、`copyright:check`、`test`（vitest）、`build`；本机可用 `npx bun run <script>` 逐个复现（本机 Git Bash 无 `bun`）。`web/` 下新增源文件必须带 AGPL 版权头（`bun run copyright` 可自动补），否则 `copyright:check` 会红。
+- **迁移安全闸**：diff 触及 `model/**` 会触发同一 workflow 的 `migration-gate` job 并标红（`model/` 决定生产库 schema，容器启动即迁移）；完成迁移评审后在 PR 标题或提交信息中加 `[migration-reviewed]` 放行。纯前端改动不受影响。
 
 ---
 
@@ -201,4 +203,5 @@
 - **2026-08-24**：3.10 更新：D1 命名清理完成，cyber.css 已移除，cyber/neon 过渡别名层表述改为「已清理」状态。
 - **2026-08-25**：3.2 新增「Lint 门禁 scoped 执行」明文章规：门禁 lint 按变更文件 scoped 执行（`oxlint -c .oxlintrc.json <文件...>`），涉及文件 0 新增 error；全仓上游存量 error 已知不修，`package.json` lint script 不动。
 - **2026-08-28**：3.10 改版：mimo 蓝紫暗色 → **暖石墨暗色**（`#14120f` 底 / 米白主按钮 / 琥珀强调 / 发丝线，去毛玻璃辉光渐变）；`--radius` 12px→8px；`--font-sans` 加显式 CJK 栈、body 字重 300→400；新增 `--section` 分节暖面 token；brand 渐变/辉光工具类压平为废弃别名、`--brand-*` 蓝紫 token 退役；首页七节（Hero+代码卡/FactStrip/Capabilities/QuickStart/FAQ/Statement/CTA）与 AuthLayout 分屏重构落地（第三期第一批）。
+- **2026-08-31**：3.2 补充 scoped lint 已接入 CI（`.github/workflows/quality-gate.yml`，diff 变更文件经 `changed-files.sh` 过滤后交 oxlint；禁止批量修上游存量或改回全仓扫描）；3.16 新增「CI 门禁」与「迁移安全闸（`[migration-reviewed]` 放行）」说明。
 - **2026-08-29**：3.10 增补：B2 全站暖化扫尾完成——蓝紫硬编码清零、辉光影删除、brand 渐变/辉光工具类删除、glass-\*/bg-radial/glow.tsx 清理、图表色板统一暖五色；首页 Hero 增加 mimo 式品牌字水印 + 鼠标跟随反相透镜（`clip-path: circle()` 跟随、逐字 hover 微亮、触屏/reduced-motion 降级为静态水印）。

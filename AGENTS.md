@@ -1,4 +1,4 @@
-# AGENTS.md — Project Conventions for new-api
+# AGENTS.md — Project Conventions for yunji-api
 
 DO NOT send optional commentary
 
@@ -66,7 +66,7 @@ web/           — Frontend (React 19, Rsbuild, Base UI, Tailwind)
 
 **relaykit module independence:** The `relaykit/` Go module MUST remain independently buildable.
 
-- Code under `relaykit/` MUST NOT import or depend on packages from the root `new-api` module, or rely on root-only configuration, generated files, or workspace wiring.
+- Code under `relaykit/` MUST NOT import or depend on packages from the root `yunji-api` module, or rely on root-only configuration, generated files, or workspace wiring.
 - Any change affecting `relaykit/` or its public APIs MUST be verified with `cd relaykit && GOWORK=off go build ./...`; a successful root-module build is not sufficient.
 
 **JSON package:** All JSON marshal/unmarshal operations MUST use the wrapper functions in `common/json.go`:
@@ -137,8 +137,24 @@ Do NOT directly import or call `encoding/json` in business code. `json.RawMessag
 - Frontend UI text must support i18n with `i18next`/`react-i18next`. Use flat JSON locale files in `web/src/i18n/locales/{lang}.json`, with English source strings as keys.
 - In React components, use `useTranslation()` and call `t('English key')` for user-facing text.
 - Follow `web/AGENTS.md` for detailed frontend conventions, including TypeScript, component structure, styling, accessibility, testing, and build checks.
+- The CI gate runs the full frontend check set (`typecheck`, scoped `lint`, `format:check`, `copyright:check`, `test`, `build`) in `.github/workflows/quality-gate.yml`. Lint is **diff-aware**: it only lints files changed by the diff, because the repository carries upstream lint debt (hundreds of pre-existing errors in inherited files) that is deliberately not bulk-fixed. Never turn the gate lint back into a whole-repository run, and never bulk-fix upstream lint debt to make a run green.
 
 ### Project Governance
+
+**Continuous integration:** `.github/workflows/quality-gate.yml` (self-hosted gate, push/PR on `main` plus `workflow_dispatch`) has three jobs:
+
+- `migration-gate` — see below.
+- `frontend` — `bun install --frozen-lockfile` then `typecheck`, scoped `oxlint` over the changed files, `format:check`, `copyright:check`, `test` (vitest), `build`. The changed-file list comes from `.github/scripts/changed-files.sh` (push: `github.event.before`; PR: `pull_request.base.sha`), restricted to lintable extensions under `web/` and mirrored against the `.oxlintrc.json` ignore patterns.
+- `backend` — `go vet ./...` and `go build ./...` for the root module and again inside `relaykit/`, then `make test` (both modules, `GOWORK=off`). The backend test step retries once because `service/channel_affinity_usage_cache_test.go` is flaky on coarse clocks (upstream issue).
+
+The upstream `.github/workflows/ci.yml` still runs its own backend/frontend subset; the two are complementary, and `.github/workflows/docker-build.yml` stays untouched because it hardcodes the upstream image namespace.
+
+**Migration safety gate (`model/`):** Schema changes ship through `AutoMigrate` registrations in `model/main.go` (`migrateDB` and `migrateDBFast`), and production containers migrate on startup with no separate migration window. Any diff touching `model/**` therefore fails the `migration-gate` job and prints the touched file list plus a review checklist.
+
+- To acknowledge a reviewed migration, put `[migration-reviewed]` in the PR title (or PR body) or in a commit message on the branch. The gate then passes and still records the touched files in the job summary.
+- New or changed model structs must be registered in **both** `migrateDB` and `migrateDBFast`; when `model/main.go` itself is in the diff, the job summary calls this out explicitly.
+- The gate fails closed: if the diff base revision cannot be resolved, the job errors instead of passing.
+- Confirm the change is safe on SQLite, MySQL >= 5.7.8, and PostgreSQL >= 9.6 before acknowledging.
 
 **Protected project information:** The following project-related information is strictly protected and MUST NOT be modified, deleted, replaced, or removed under any circumstances:
 
