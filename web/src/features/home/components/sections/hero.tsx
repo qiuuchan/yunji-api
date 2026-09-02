@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2023-2026 QuantumNous
+Copyright (C) 2023-2026 qiuuchan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -14,7 +14,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-For commercial licensing, please contact support@quantumnous.com
+For commercial licensing, please contact business@zhonguoyunji.com
 */
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, Building2 } from 'lucide-react'
@@ -45,7 +45,11 @@ function Watermark(props: { inverted?: boolean }) {
   return (
     <div
       aria-hidden='true'
-      className='pointer-events-auto absolute inset-0 flex flex-col overflow-hidden select-none'
+      className={cn(
+        'absolute inset-0 flex flex-col overflow-hidden select-none',
+        // 反相透镜内的水印副本必须保持指针穿透，否则整层透镜会挡住 hero 的按钮。
+        props.inverted ? 'pointer-events-none' : 'pointer-events-auto'
+      )}
     >
       {rows.map((row) => (
         <div
@@ -219,6 +223,14 @@ export function Hero(props: HeroProps) {
                   </p>
                   <div className='mt-9 flex flex-wrap items-center gap-3'>
                     {lensCta}
+                  </div>
+                </div>
+
+                {/* 代码卡片的负片副本：用 invert 反相，使鼠标划过时圆内也能看到
+                    卡片样式，避免被米白底+水印整体盖住。仅 lg 显示（与真实卡片一致）。 */}
+                <div className='hidden lg:col-span-5 lg:block'>
+                  <div className='invert hue-rotate-180'>
+                    <HeroCodeCard />
                   </div>
                 </div>
               </div>
